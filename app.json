@@ -16,13 +16,15 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.armdoctor.RookyApp"
+      "bundleIdentifier": "com.armdoctor.RookyApp",
+      "buildNumber": "2"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.armdoctor.RookyApp"
     },
     "web": {
       "favicon": "./assets/favicon.png"
