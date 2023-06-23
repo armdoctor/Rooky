@@ -211,6 +211,8 @@ const HomeScreen = ({ navigation }) => {
     );
   };
 
+  const StickFiguresImage = require('../assets/favpng_sport-stick-figure.png');
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
@@ -241,7 +243,13 @@ const HomeScreen = ({ navigation }) => {
           renderItem={renderItem}
           keyExtractor={(item) => item.id}
           contentContainerStyle={styles.listContainer}
-          ListEmptyComponent={<Text style={styles.subtext}>No upcoming bookings</Text>}
+          ListEmptyComponent={
+          <View>
+            <Text style={styles.subtext}>No upcoming bookings... yet.</Text>
+            <Text style={styles.subtext}>Pick a sport above to book a class!</Text>
+            <Image source={StickFiguresImage} style={styles.stickFigureImage}/>
+          </View>
+        }
         />
       <View style={styles.buttonContainer}>
         <TouchableOpacity onPress={handleNewListing} style={styles.iconButton}>
@@ -333,14 +341,14 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginLeft: 8,
     marginTop: 40,
-    marginBottom: 5,
+    marginBottom: 8,
     color: "#FF385C",
   },
   subtext: {
-    fontSize: 15,
+    fontSize: 18,
     marginLeft: 9,
     marginTop: 5,
-    fontWeight: 'bold',
+    fontWeight: '500',
   },
   bookingItem: {
     backgroundColor: '#f2f2f2',
@@ -361,6 +369,13 @@ const styles = StyleSheet.create({
   bookingDuration: {
     fontSize: 16,
     color: '#888',
+  },
+  stickFigureImage: {
+    width: 220,
+    height: 220,
+    tintColor: '#b5b3b3',
+    marginTop: 60,
+    marginLeft: 40,
   },
 });
 
