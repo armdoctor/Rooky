@@ -136,7 +136,7 @@ const styles = StyleSheet.create({
     marginLeft: 100,
     marginTop: 5,
     fontSize: 16,
-    fontWeight: 'light',
+    fontWeight: 'normal',
   },
   ratingContainer: {
     flexDirection: 'row',
