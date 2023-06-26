@@ -53,9 +53,9 @@ const HomeScreen = ({ navigation }) => {
         createdByBookings.push(booking);
       });
 
-      // Sort the bookings in ascending order based on "classStart"
       const fetchedBookings = [...confirmedByBookings, ...createdByBookings];
 
+      // Sort the bookings in ascending order based on "classStart"
       fetchedBookings.sort((a, b) => a.classStart.toDate() - b.classStart.toDate());
 
       // Filter and separate the bookings into 'Upcoming' and 'Completed' categories
