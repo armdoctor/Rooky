@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Modal, Image, FlatList } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
-import { onAuthStateChanged, signOut } from 'firebase/auth';
+import { onAuthStateChanged, signOut, deleteUser } from 'firebase/auth';
 import { auth, storage, db } from '../firebase/firebase';
 import { doc, getDoc, query, collection, where, getDocs, onSnapshot } from 'firebase/firestore';
 import { ref, getDownloadURL } from 'firebase/storage';
@@ -21,6 +21,8 @@ const ProfileScreen = () => {
   const [fullName, setFullName] = useState('');
   const [listingsData, setListingsData] = useState([]);
   const [listings, setListings] = useState([]);
+  const [isDeleteModalVisible, setDeleteModalVisible] = useState(false);
+  const [deleteConfirmation, setDeleteConfirmation] = useState(false);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -134,6 +136,37 @@ const ProfileScreen = () => {
     }
   };
 
+  const handleDeleteAccount = () => {
+    setDeleteModalVisible(true);
+  };  
+
+  const handleConfirmDeletion = () => {
+    setDeleteConfirmation(true);
+    setDeleteModalVisible(false);
+  };
+  
+  useEffect(() => {
+    if (deleteConfirmation) {
+      const user = auth.currentUser;
+  
+      deleteUser(user)
+        .then(() => {
+          console.log('Account deleted successfully');
+          setIsLoggedIn(false);
+          navigation.navigate('HomeScreen');
+        })
+        .catch((error) => {
+          console.log('Account deletion error:', error);
+        });
+    }
+  }, [deleteConfirmation]);
+  
+  const handleCancelDeletion = () => {
+    setDeleteConfirmation(false);
+    setDeleteModalVisible(false);
+  };
+  
+
   const closeModal = () => {
     setLoginModalVisible(false);
     setTargetScreen('');
@@ -203,6 +236,9 @@ const ProfileScreen = () => {
           <TouchableOpacity onPress={handleLogout} style={styles.logoutButton}>
             <Text style={styles.logoutText}>Log Out</Text>
           </TouchableOpacity>
+          <TouchableOpacity onPress={handleDeleteAccount} style={styles.logoutButton}>
+            <Text style={styles.logoutText}>Delete Account</Text>
+          </TouchableOpacity>
           </View>
         </>
       ) : (
@@ -210,6 +246,19 @@ const ProfileScreen = () => {
           <Text style={styles.loginText}>Sign In</Text>
         </TouchableOpacity>
       )}
+      <Modal visible={isDeleteModalVisible} onRequestClose={handleCancelDeletion} animationType="slide">
+        <View style={styles.modalContainer}>
+          <Text style={styles.modalText}>Are you sure you want to delete your account?</Text>
+          <View style={styles.modalButtonContainer}>
+            <TouchableOpacity onPress={handleConfirmDeletion} style={[styles.modalButton, styles.confirmButton]}>
+              <Text style={styles.modalButtonText}>Yes</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={handleCancelDeletion} style={[styles.modalButton, styles.cancelButton]}>
+              <Text style={styles.modalButtonText}>No</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
       <Modal visible={isLoginModalVisible} onRequestClose={closeModal} animationType="slide">
         <LoginScreen closeModal={closeModal} targetScreen={targetScreen} navigation={navigation} />
       </Modal>
@@ -314,6 +363,38 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'white',
+  },
+  modalText: {
+    fontSize: 16,
+    marginBottom: 20,
+    color: 'black',
+  },
+  modalButtonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+  },
+  modalButton: {
+    paddingVertical: 12,
+    paddingHorizontal: 30,
+    borderRadius: 8,
+    marginHorizontal: 10,
+  },
+  confirmButton: {
+    backgroundColor: '#FF385C',
+  },
+  cancelButton: {
+    backgroundColor: 'gray',
+  },
+  modalButtonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },  
 });
 
 export default ProfileScreen;
