@@ -211,7 +211,7 @@ const HomeScreen = ({ navigation }) => {
     );
   };
 
-  const StickFiguresImage = require('../assets/favpng_sport-stick-figure.png');
+  const StickFiguresImage = require('../images/favpng_sport-stick-figure.png');
 
   return (
     <SafeAreaView style={styles.container}>
