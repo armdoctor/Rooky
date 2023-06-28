@@ -7,8 +7,7 @@ import { useNavigation } from '@react-navigation/native';
 import * as ImagePicker from 'expo-image-picker';
 import { uploadImageAsync } from '../helpers/ImageUploader'; // Create a helper function to upload the image
 import Icon from 'react-native-vector-icons/Ionicons';
-
-
+import * as ImageManipulator from 'expo-image-manipulator';
 
 const RegisterScreen = () => {
   const [email, setEmail] = useState('');
@@ -25,7 +24,16 @@ const RegisterScreen = () => {
       console.log('Registered with:', user.email);
   
       if (profileImage) {
-        const imageURL = await uploadImageAsync(profileImage.uri, user.uid);
+        const { uri } = profileImage;
+  
+        // Resize the image
+        const resizedImage = await ImageManipulator.manipulateAsync(
+          uri,
+          [{ resize: { width: 500, height: 500 } }],
+          { compress: 0.8, format: 'jpeg' }
+        );
+  
+        const imageURL = await uploadImageAsync(resizedImage.uri, user.uid);
         console.log('Image uploaded successfully. URL:', imageURL);
   
         // Store additional information in Firestore, including the image URL
@@ -49,8 +57,7 @@ const RegisterScreen = () => {
     } catch (error) {
       console.error('Registration error:', error);
     }
-  };
-  
+  };  
 
   const handleSelectProfileImage = async () => {
     try {

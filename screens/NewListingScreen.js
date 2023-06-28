@@ -7,6 +7,7 @@ import { useNavigation } from '@react-navigation/native';
 import * as ImagePicker from 'expo-image-picker';
 import { uploadImageAsync } from '../helpers/ListingImageUploader';
 import { Ionicons } from '@expo/vector-icons';
+import * as ImageManipulator from 'expo-image-manipulator';
 
 const NewListingScreen = () => {
   const [price, setPrice] = useState('');
@@ -45,26 +46,26 @@ const NewListingScreen = () => {
       console.error('Error fetching categories and user listings:', error);
     }
   };
-  
 
   const handlePublishListing = async () => {
     try {
       const user = auth.currentUser;
       const userListingInCategory = userListings.find((listing) => listing.category.id === selectedCategory);
-  
+
       if (userListingInCategory) {
         console.log('User already has a listing in the selected category');
         return;
       }
-  
+
       const categoryRef = doc(db, 'categories', selectedCategory);
       let imageURL = listingImageURL; // Use the existing URL if available
-  
+
       if (selectedImage) {
-        imageURL = await uploadImageAsync(selectedImage.uri);
+        const compressedImage = await compressImage(selectedImage.uri);
+        imageURL = await uploadImageAsync(compressedImage.uri);
         console.log('Listing image uploaded successfully. URL:', imageURL);
       }
-  
+
       const listingData = {
         price: parseFloat(price),
         description,
@@ -72,20 +73,19 @@ const NewListingScreen = () => {
         user: doc(db, 'users', user.uid),
         image: imageURL,
       };
-  
+
       const listingRef = await addDoc(collection(db, 'listings'), listingData);
       const listingId = listingRef.id;
-  
+
       await updateDoc(doc(db, 'listings', listingId), { listingId });
-  
+
       console.log('Listing published with ID:', listingId);
-  
+
       navigation.navigate('HomeScreen');
     } catch (error) {
       console.error('Error publishing listing:', error);
     }
   };
-  
 
   const handleSelectImage = async () => {
     try {
@@ -94,16 +94,17 @@ const NewListingScreen = () => {
         alert('Permission to access media library was denied.');
         return;
       }
-  
+
       const result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
         allowsEditing: true,
         aspect: [1, 1],
         quality: 1,
       });
-  
+
       if (!result.canceled) {
-        setSelectedImage(result.assets[0]);
+        const selectedAsset = result.assets[0];
+        setSelectedImage(selectedAsset);
       }
     } catch (error) {
       console.error('ImagePicker error:', error);
@@ -113,14 +114,22 @@ const NewListingScreen = () => {
   const handleBackButtonPress = () => {
     navigation.goBack();
   };
-  
+
+  const compressImage = async (uri) => {
+    const manipulatorResult = await ImageManipulator.manipulateAsync(
+      uri,
+      [{ resize: { width: 500, height: 500 } }],
+      { compress: 0.5, format: ImageManipulator.SaveFormat.JPEG }
+    );
+    return manipulatorResult;
+  };
 
   return (
-      <KeyboardAvoidingView style={styles.container} behavior="padding" keyboardVerticalOffset={50}>
+    <KeyboardAvoidingView style={styles.container} behavior="padding" keyboardVerticalOffset={50}>
       <SafeAreaView>
         <TouchableOpacity style={styles.backButton} onPress={handleBackButtonPress}>
-            <Ionicons name="arrow-back" size={25} color="#FF385C" marginBottom={-30} marginLeft={8} />
-          </TouchableOpacity>
+          <Ionicons name="arrow-back" size={25} color="#FF385C" marginBottom={-30} marginLeft={8} />
+        </TouchableOpacity>
         <ScrollView contentContainerStyle={styles.scrollContainer}>
           <Text style={styles.heading}>Create a New Listing</Text>
           <TouchableOpacity onPress={handleSelectImage} style={styles.imagePicker}>
@@ -156,12 +165,12 @@ const NewListingScreen = () => {
               multiline
             />
           </View>
-        <TouchableOpacity onPress={handlePublishListing} style={styles.button}>
-          <Text style={styles.buttonText}>Publish Listing</Text>
-        </TouchableOpacity>  
+          <TouchableOpacity onPress={handlePublishListing} style={styles.button}>
+            <Text style={styles.buttonText}>Publish Listing</Text>
+          </TouchableOpacity>
         </ScrollView>
-        </SafeAreaView>
-      </KeyboardAvoidingView>
+      </SafeAreaView>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -198,7 +207,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     color: '#FF385C',
-    marginBottom:20,
+    marginBottom: 20,
   },
   selectedImage: {
     width: 200,

@@ -161,6 +161,7 @@ const ProfileScreen = () => {
     }
   }, [deleteConfirmation]);
   
+  
   const handleCancelDeletion = () => {
     setDeleteConfirmation(false);
     setDeleteModalVisible(false);
