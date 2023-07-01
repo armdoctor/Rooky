@@ -136,7 +136,9 @@ const NewListingScreen = () => {
             {selectedImage ? (
               <Image source={{ uri: selectedImage.uri }} style={styles.selectedImage} />
             ) : (
-              <Text style={styles.imagePickerText}>Select Image</Text>
+              <View style={styles.buttonSelect}>
+              <Text style={styles.imagePickerText}>Select Listing Image</Text>
+              </View>
             )}
           </TouchableOpacity>
           <View style={styles.formContainer}>
@@ -195,7 +197,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginTop: 20,
-    marginBottom: 20,
+    marginBottom: 15,
     textAlign: 'center',
   },
   imagePicker: {
@@ -204,10 +206,12 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   imagePickerText: {
-    fontSize: 16,
+    fontSize: 22,
     fontWeight: 'bold',
-    color: '#FF385C',
-    marginBottom: 20,
+    color: 'white',
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    marginBottom: 0,
   },
   selectedImage: {
     width: 200,
@@ -247,6 +251,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 60,
     marginBottom: 0,
+  },
+  buttonSelect: {
+    backgroundColor: '#FF385C',
+    borderRadius: 10,
+    paddingVertical: 5,
+    alignItems: 'center',
+    marginTop: 0,
+    marginBottom: 15,
   },
   buttonText: {
     color: '#fff',
