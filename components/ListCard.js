@@ -4,7 +4,7 @@ import { Card, Icon } from 'react-native-elements';
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import { db, storage } from '../firebase/firebase';
 import { doc, getDoc } from 'firebase/firestore';
-import { ref, getDownloadURL } from 'firebase/storage';
+import { ref, getDownloadURL, getMetadata } from 'firebase/storage';
 
 const CustomRating = ({ averageRating }) => {
   return (
@@ -23,6 +23,18 @@ const CustomRating = ({ averageRating }) => {
   );
 };
 
+const fetchListingImage = async (imageName) => {
+  try {
+    const storagePath = `listingImages/${imageName}`;
+    const storageRef = ref(storage, storagePath);
+    const imageUrl = await getDownloadURL(storageRef);
+    return imageUrl;
+  } catch (error) {
+    console.error('Error fetching listing image:', error);
+    return null;
+  }
+};
+
 const ListCard = ({
   navigation,
   name,
@@ -31,13 +43,14 @@ const ListCard = ({
   description,
   userId,
   listingId,
+  imageName,
 }) => {
   const [averageRating, setAverageRating] = useState(0);
-  const [profileImageURL, setProfileImageURL] = useState('');
+  const [listingImageUrl, setListingImageUrl] = useState('');
 
   useEffect(() => {
     fetchAverageRating();
-    fetchProfileImage(userId);
+    fetchListingImage(listingId);
   }, []);
 
   const fetchAverageRating = async () => {
@@ -65,31 +78,36 @@ const ListCard = ({
     }
   };
 
-  const fetchProfileImage = async (userId) => {
+  const fetchListingImage = async (listingId) => {
     try {
-      const userDocRef = doc(db, 'users', userId);
-      const userDocSnapshot = await getDoc(userDocRef);
-      if (userDocSnapshot.exists()) {
-        const userData = userDocSnapshot.data();
-        const profileImageData = userData.profileImageURL;
-        if (profileImageData) {
-          const downloadURL = profileImageData.downloadURL;
-          const imageName = profileImageData.imageName;
-          const storagePath = `profileImages/${imageName}`;
-          const storageRef = ref(storage, storagePath);
-          const imageUrl = await getDownloadURL(storageRef);
-  
-          setProfileImageURL(imageUrl);
-        } else {
-          // Set a default image URL if the profile image is not available
-          setProfileImageURL(''); // Replace with your default image URL
-        }
+      const listingDocRef = doc(db, 'listings', listingId);
+      const listingDocSnapshot = await getDoc(listingDocRef);
+      if (listingDocSnapshot.exists()) {
+        const listingData = listingDocSnapshot.data();
+        const imageName = listingData.image.imageName;
+        console.log('Image Name:', imageName);
+        const downloadURL = await getListingImageUrl(imageName);
+        console.log('Download URL:', downloadURL);
+        setListingImageUrl(downloadURL);
+      } else {
+        // Handle the case when the listing document doesn't exist
       }
     } catch (error) {
-      // Set a default image URL in case of an error
-      setProfileImageURL(''); // Replace with your default image URL
+      console.error('Error fetching listing image:', error);
     }
-  };
+  };  
+  
+  
+  const getListingImageUrl = async (imageName) => {
+    try {
+      const storageRef = ref(storage, `listingImages/${imageName}`);
+      const downloadURL = await getDownloadURL(storageRef);
+      return downloadURL;
+    } catch (error) {
+      console.error('Error fetching listing image:', error);
+      return ''; // Return a default image URL or handle the error as desired
+    }
+  };  
   
 
   return (
@@ -108,9 +126,9 @@ const ListCard = ({
         }
       >
        <Card containerStyle={{ borderRadius: 10, height: 107 }}>
-  {profileImageURL ? (
+  {listingImageUrl ? (
     <Image
-      source={{ uri: profileImageURL }}
+      source={{ uri: listingImageUrl }}
       style={styles.profileImage}
     />
   ) : null}
