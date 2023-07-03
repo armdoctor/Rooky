@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View, Image, Dimensions } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { Card, Icon } from 'react-native-elements';
 import { collection, getDocs, query, where } from 'firebase/firestore';
@@ -34,6 +34,8 @@ const fetchListingImage = async (imageName) => {
     return null;
   }
 };
+
+const screenWidth = Dimensions.get('window').width;
 
 const ListCard = ({
   navigation,
@@ -95,9 +97,8 @@ const ListCard = ({
     } catch (error) {
       console.error('Error fetching listing image:', error);
     }
-  };  
-  
-  
+  };
+
   const getListingImageUrl = async (imageName) => {
     try {
       const storageRef = ref(storage, `listingImages/${imageName}`);
@@ -107,8 +108,7 @@ const ListCard = ({
       console.error('Error fetching listing image:', error);
       return ''; // Return a default image URL or handle the error as desired
     }
-  };  
-  
+  };
 
   return (
     <View style={styles.container}>
@@ -126,15 +126,15 @@ const ListCard = ({
         }
       >
         <Card containerStyle={styles.cardContainer}>
-          <View style={styles.cardContent}>
+          <View style={styles.imageContainer}>
             {listingImageUrl ? (
               <Image source={{ uri: listingImageUrl }} style={styles.profileImage} />
             ) : null}
-            <View style={styles.cardTextContainer}>
-              <Text style={styles.headerStyle}>{name}</Text>
-              <CustomRating averageRating={averageRating} />
-              <Text style={styles.subheaderStyle}>${price}/hr</Text>
-            </View>
+          </View>
+          <View style={styles.detailsContainer}>
+            <Text style={styles.headerStyle}>{name}</Text>
+            <Text style={styles.subheaderStyle}>${price}/hr</Text>
+            <CustomRating averageRating={averageRating} />
           </View>
         </Card>
       </TouchableOpacity>
@@ -143,46 +143,47 @@ const ListCard = ({
 };
 
 const styles = StyleSheet.create({
-  container: {},
-  cardContainer: {
-    borderRadius: 10,
-    padding: 10,
-    height: 114,
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  cardContent: {
-    flexDirection: 'row',
+  cardContainer: {
+    width: '90%', // Adjust the width to your desired value
+    borderRadius: 10,
+    backgroundColor: '#fff', // Adjust the background color to match the color scheme
+  },
+  imageContainer: {
+    marginRight: 10,
     alignItems: 'center',
   },
-  cardTextContainer: {
+  detailsContainer: {
     flex: 1,
-    marginLeft: 15,
-    paddingTop: 7,
   },
   headerStyle: {
-    fontSize: 22,
+    fontSize: 24,
     fontWeight: 'bold',
-    marginBottom: 5,
+    marginBottom: 7,
+    marginTop: 10,
+    color: '#333', // Adjust the text color to match the color scheme
   },
   subheaderStyle: {
-    fontSize: 18,
-    fontWeight: 'normal',
-    color: '#888',
-    marginTop: 8,
+    fontSize: 20,
+    marginBottom: 3,
+    color: '#888', // Adjust the text color to match the color scheme
   },
   ratingContainer: {
     flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 2,
+    marginTop: 6,
+    marginBottom: 5,
   },
   starContainer: {
-    marginRight: 3,
+    marginRight: 5,
   },
   profileImage: {
-    width: 85,
-    height: 85,
-    borderRadius: 100,
-    marginTop: 5,
-    marginLeft: 10,
+    width: 300,
+    height: 230,
+    borderRadius: 15,
   },
 });
 
