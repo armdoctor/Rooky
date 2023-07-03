@@ -50,7 +50,18 @@ const InboxScreen = ({ navigation }) => {
           }
         }
 
-        setChats(chatsData);
+        console.log('Unsorted chatsData:', chatsData);
+
+        // Sort chatsData array based on the most recent message timestamp
+        const sortedChatsData = chatsData.sort((a, b) => {
+          const aDate = new Date(a.messages[a.messages.length - 1].createdAt);
+          const bDate = new Date(b.messages[b.messages.length - 1].createdAt);
+          return bDate.getTime() - aDate.getTime();
+        });
+
+        console.log('Sorted chatsData:', sortedChatsData);
+
+        setChats(sortedChatsData);
         setIsLoading(false);
       }
     );
@@ -59,6 +70,7 @@ const InboxScreen = ({ navigation }) => {
       unsubscribe();
     };
   }, []);
+  
 
   const handleChatPress = (chatId) => {
     navigation.navigate('Chat', { chatId });
