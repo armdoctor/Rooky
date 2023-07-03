@@ -112,7 +112,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   backButton: {
-    marginRight: 10,
+    marginRight: 0,
     padding: 8,
   },
   heading: {
