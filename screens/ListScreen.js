@@ -13,7 +13,7 @@ import {
   KeyboardAvoidingView,
 } from 'react-native';
 import { ref, getDownloadURL } from 'firebase/storage';
-import { collection, doc, getDocs, query, where, serverTimestamp, addDoc, getDoc, updateDoc } from 'firebase/firestore';
+import { collection, doc, getDocs, query, where, serverTimestamp, addDoc, getDoc, updateDoc, deleteDoc } from 'firebase/firestore';
 import { db, auth, storage } from '../firebase/firebase';
 import LoginScreen from './LoginScreen';
 import * as ImagePicker from 'expo-image-picker';
@@ -51,6 +51,7 @@ const ListScreen = ({ route, navigation }) => {
   const [price, setPrice] = useState(initialPrice);
   const [description, setDescription] = useState(initialDescription);
   const [editedImage, setEditedImage] = useState(null);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   useEffect(() => {
     fetchReviews();
@@ -294,11 +295,40 @@ const ListScreen = ({ route, navigation }) => {
     navigation.goBack();
   };
 
+  const handleDeleteListing = async () => {
+    try {
+      const listingDocRef = doc(db, 'listings', listingId);
+      await deleteDoc(listingDocRef);
+      console.log('Listing deleted successfully');
+      navigation.goBack(); // Navigate back after deleting the listing
+    } catch (error) {
+      console.error('Error deleting listing:', error);
+    }
+  };
+
+  const handleDeleteButtonPress = () => {
+    setShowDeleteModal(true);
+  };
+  
+  const handleCancelDelete = () => {
+    setShowDeleteModal(false);
+  };
+
+  const handleConfirmDelete = () => {
+    setShowDeleteModal(false);
+    handleDeleteListing();
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <TouchableOpacity style={styles.backButton} onPress={handleBackButtonPress}>
         <Ionicons name="arrow-back" size={25} color="#FF385C" marginBottom={-10} marginLeft={10} />
       </TouchableOpacity>
+      {isListingOwner && (
+      <TouchableOpacity style={styles.deleteButton} onPress={handleDeleteButtonPress}>
+        <Ionicons name="trash-bin" size={25} color="#FF385C" />
+      </TouchableOpacity>
+      )}
       <ScrollView>
         <View style={styles.imageContainer}>
           {listingImageURL ? (
@@ -401,6 +431,18 @@ const ListScreen = ({ route, navigation }) => {
         </SafeAreaView>
         </KeyboardAvoidingView>
       </Modal>
+      {/* Delete Confirmation Modal */}
+    <Modal visible={showDeleteModal} animationType="slide">
+      <View style={styles.deleteModalContainer}>
+        <Text style={styles.deleteModalText}>Are you sure you want to delete this listing?</Text>
+        <TouchableOpacity style={styles.deleteModalButton} onPress={handleConfirmDelete}>
+          <Text style={styles.deleteModalButtonText}>Delete</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.cancelDeleteModalButton} onPress={handleCancelDelete}>
+          <Text style={styles.deleteModalButtonText}>Cancel</Text>
+        </TouchableOpacity>
+      </View>
+    </Modal>
     </SafeAreaView>
   );
 };
@@ -579,6 +621,43 @@ const styles = StyleSheet.create({
     marginTop: 40,
     fontSize: 16,
     alignSelf: 'center',
+  },
+  deleteButton: {
+    position: 'absolute',
+    top: 46,
+    right: 20,
+  },
+  deleteModalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    padding: 20,
+  },
+  deleteModalText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 20,
+    textAlign: 'center',
+  },
+  deleteModalButton: {
+    backgroundColor: '#1B998B',
+    borderRadius: 10,
+    paddingVertical: 15,
+    paddingHorizontal: 30,
+    marginBottom: 15,
+  },
+  cancelDeleteModalButton: {
+    backgroundColor: '#FF385C',
+    borderRadius: 10,
+    paddingVertical: 15,
+    paddingHorizontal: 30,
+    marginBottom: 15,
+  },
+  deleteModalButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
 
