@@ -125,18 +125,18 @@ const ListCard = ({
           })
         }
       >
-       <Card containerStyle={{ borderRadius: 10, height: 107 }}>
-  {listingImageUrl ? (
-    <Image
-      source={{ uri: listingImageUrl }}
-      style={styles.profileImage}
-    />
-  ) : null}
-  <Text style={styles.headerStyle}>{name}</Text>
-  <CustomRating averageRating={averageRating} />
-  <Text style={styles.subheaderStyle}>${price}/hr</Text>
-</Card>
-
+        <Card containerStyle={styles.cardContainer}>
+          <View style={styles.cardContent}>
+            {listingImageUrl ? (
+              <Image source={{ uri: listingImageUrl }} style={styles.profileImage} />
+            ) : null}
+            <View style={styles.cardTextContainer}>
+              <Text style={styles.headerStyle}>{name}</Text>
+              <CustomRating averageRating={averageRating} />
+              <Text style={styles.subheaderStyle}>${price}/hr</Text>
+            </View>
+          </View>
+        </Card>
       </TouchableOpacity>
     </View>
   );
@@ -144,33 +144,45 @@ const ListCard = ({
 
 const styles = StyleSheet.create({
   container: {},
+  cardContainer: {
+    borderRadius: 10,
+    padding: 10,
+    height: 120,
+  },
+  cardContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  cardTextContainer: {
+    flex: 1,
+    marginLeft: 15,
+    paddingTop: 7,
+  },
   headerStyle: {
-    marginLeft: 100,
-    marginTop: -75,
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: 'bold',
+    marginBottom: 5,
   },
   subheaderStyle: {
-    marginLeft: 100,
-    marginTop: 5,
-    fontSize: 16,
+    fontSize: 15,
     fontWeight: 'normal',
+    color: '#888',
+    marginTop: 8,
   },
   ratingContainer: {
     flexDirection: 'row',
-    marginTop: 6,
-    marginLeft: 100,
-    marginBottom: 5,
+    alignItems: 'center',
+    marginTop: 2,
   },
   starContainer: {
-    marginRight: 5,
+    marginRight: 3,
   },
   profileImage: {
     width: 75,
     height: 75,
     borderRadius: 100,
-    marginTop: 0,
-    marginLeft: 8,
+    marginTop: 5,
+    marginLeft: 10,
   },
 });
 

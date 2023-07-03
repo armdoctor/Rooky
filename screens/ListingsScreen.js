@@ -41,7 +41,7 @@ const fetchListings = async (category, setListings) => {
   }
 };
 
-const TennisPage = ({ route }) => {
+const ListingsScreen = ({ route }) => {
   const navigation = useNavigation();
   const { category } = route.params;
   const [listings, setListings] = useState([]);
@@ -125,4 +125,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default TennisPage;
+export default ListingsScreen;
