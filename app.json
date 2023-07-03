@@ -16,7 +16,6 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.armdoctor.RookyApp",
       "icon": "./assets/icon.png",
       "userInterfaceStyle": "light",
       "splash": {
