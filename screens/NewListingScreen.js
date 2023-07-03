@@ -206,7 +206,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   imagePickerText: {
-    fontSize: 22,
+    fontSize: 18,
     fontWeight: 'bold',
     color: 'white',
     paddingVertical: 5,
