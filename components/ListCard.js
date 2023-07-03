@@ -147,7 +147,7 @@ const styles = StyleSheet.create({
   cardContainer: {
     borderRadius: 10,
     padding: 10,
-    height: 120,
+    height: 114,
   },
   cardContent: {
     flexDirection: 'row',
@@ -159,12 +159,12 @@ const styles = StyleSheet.create({
     paddingTop: 7,
   },
   headerStyle: {
-    fontSize: 18,
+    fontSize: 22,
     fontWeight: 'bold',
     marginBottom: 5,
   },
   subheaderStyle: {
-    fontSize: 15,
+    fontSize: 18,
     fontWeight: 'normal',
     color: '#888',
     marginTop: 8,
@@ -178,8 +178,8 @@ const styles = StyleSheet.create({
     marginRight: 3,
   },
   profileImage: {
-    width: 75,
-    height: 75,
+    width: 85,
+    height: 85,
     borderRadius: 100,
     marginTop: 5,
     marginLeft: 10,

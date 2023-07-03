@@ -17,6 +17,7 @@ import { collection, doc, getDocs, query, where, serverTimestamp, addDoc, getDoc
 import { db, auth, storage } from '../firebase/firebase';
 import LoginScreen from './LoginScreen';
 import * as ImagePicker from 'expo-image-picker';
+import * as ImageManipulator from 'expo-image-manipulator';
 import { uploadImageAsync } from '../helpers/ListingImageUploader';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -226,16 +227,20 @@ const ListScreen = ({ route, navigation }) => {
         description,
       };
       console.log('Price and description:', listingData);
-
+  
       // Update the price and description in the listings document
       await updateDoc(listingDocRef, listingData);
       console.log('Price and description updated');
-
+  
       // Update the image if edited
       if (editedImage) {
+        console.log('Compressing image...');
+        const compressedImage = await compressImage(editedImage.uri);
+        console.log('Image compressed:', compressedImage);
+  
         console.log('Uploading image...');
         try {
-          const { downloadURL, imageName } = await uploadImageAsync(editedImage.uri);
+          const { downloadURL, imageName } = await uploadImageAsync(compressedImage.uri);
           setEditedImage(null); // Reset the editedImage state to null immediately after upload
           console.log('Image uploaded:', imageName, downloadURL);
           // Update the listing document with the new image URL and name
@@ -255,14 +260,28 @@ const ListScreen = ({ route, navigation }) => {
       } else {
         console.log('No image to upload');
       }
-
+  
       // Fetch the updated listing image
       await fetchListingImage();
       console.log('Listing image fetched:', listingImageURL);
-
+  
       setShowEditModal(false); // Close the modal
     } catch (error) {
       console.error('Error saving listing edits:', error);
+    }
+  };
+
+  const compressImage = async (imageUri) => {
+    try {
+      const manipResult = await ImageManipulator.manipulateAsync(
+        imageUri,
+        [{ resize: { width: 800 } }],
+        { compress: 0.8, format: ImageManipulator.SaveFormat.JPEG }
+      );
+      return manipResult;
+    } catch (error) {
+      console.error('Error compressing image:', error);
+      return { uri: imageUri }; // Return the original image URI if compression fails
     }
   };
 
