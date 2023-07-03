@@ -95,13 +95,13 @@ const InboxScreen = ({ navigation }) => {
       </TouchableOpacity>
     );
   };
-  
-  
 
   if (isLoading) {
     return (
       <View style={styles.container}>
-        <Text style={styles.loadingText}>Loading...</Text>
+        <SafeAreaView>
+        <Text style={styles.loadingText}>Loading Chats...</Text>
+        </SafeAreaView>
       </View>
     );
   }
@@ -126,13 +126,13 @@ const InboxScreen = ({ navigation }) => {
         <Icon name="arrow-back" size={25} color="#FF385C" marginBottom={-30} marginLeft={8} />
       </TouchableOpacity>
       <Text style={styles.heading}>Chats</Text>
-      </SafeAreaView>
       <FlatList
         data={chats}
         keyExtractor={(item) => item.id}
         renderItem={renderChatItem}
         contentContainerStyle={styles.chatList}
       />
+      </SafeAreaView>
     </View>
   );
 };
