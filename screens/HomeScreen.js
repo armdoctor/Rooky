@@ -134,16 +134,6 @@ const HomeScreen = ({ navigation }) => {
   }, [currentUser]); // Update the dependency to currentUser
   
 
-  useEffect(() => {
-    const unsubscribeFocus = navigation.addListener('focus', () => {
-      // Refresh homescreen when returning to the screen
-      fetchBookings();
-    });
-
-    return unsubscribeFocus;
-  }, [navigation]);
-  
-
   const handleManageBookings = () => {
     if (isLoggedIn) {
       navigation.navigate('BookingManagementScreen');
