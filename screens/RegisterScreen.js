@@ -103,6 +103,12 @@ const RegisterScreen = () => {
       </TouchableOpacity>
       <View style={styles.inputContainer}>
         <TextInput
+            placeholder='Full Name'
+            value={fullName}
+            onChangeText={text => setFullName(text)}
+            style={styles.input}
+        />
+        <TextInput
           placeholder='Email'
           value={email}
           onChangeText={text => setEmail(text)}
@@ -114,12 +120,6 @@ const RegisterScreen = () => {
           onChangeText={text => setPassword(text)}
           style={styles.input}
           secureTextEntry
-        />
-        <TextInput
-          placeholder='Full Name'
-          value={fullName}
-          onChangeText={text => setFullName(text)}
-          style={styles.input}
         />
       </View>
       <View style={styles.buttonContainer}>
