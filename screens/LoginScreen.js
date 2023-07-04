@@ -54,6 +54,7 @@ const LoginScreen = ({ closeModal, targetScreen, navigation }) => {
       <TouchableOpacity onPress={handleCloseModal} style={styles.closeButton}>
       <Icon name="close" size={24} color="#FF385C" />
       </TouchableOpacity>
+      <Text style={styles.header}>Rooky</Text>
       <View style={styles.inputContainer}>
         <TextInput
           placeholder='Email'
@@ -74,16 +75,16 @@ const LoginScreen = ({ closeModal, targetScreen, navigation }) => {
       <View style={styles.buttonContainer}>
         <TouchableOpacity
           onPress={handleLogin}
-          style={styles.button}
+          style={[styles.button, styles.buttonOutline]}
         >
-          <Text style={styles.buttonText}>Login</Text>
+          <Text style={styles.buttonOutlineText}>Login</Text>
         </TouchableOpacity>
         <Text style={styles.textStyle}>Don't Have An Account?</Text>
         <TouchableOpacity
           onPress={handleSignUp}
-          style={[styles.button, styles.buttonOutline]}
+          style={[styles.button]}
         >
-          <Text style={styles.buttonOutlineText}>Sign Up</Text>
+          <Text style={styles.buttonText}>Sign Up</Text>
         </TouchableOpacity>
       </View>
     </KeyboardAvoidingView>
@@ -118,7 +119,13 @@ const styles = StyleSheet.create({
       width: '60%',
       justifyContent: 'center',
       alignItems: 'center',
-      marginTop: 40,
+      marginTop: 20,
+    },
+    header: {
+      fontSize: 38,
+      fontWeight: 'bold',
+      top: -35,
+      right: 4,
     },
     button: {
       backgroundColor: '#FF385C',
@@ -145,7 +152,7 @@ const styles = StyleSheet.create({
       fontSize: 16,
     },
     textStyle: {
-      marginTop: 10,
+      marginTop: 16,
       marginBottom: 8,
       color: '#999',
       fontSize: 14,
