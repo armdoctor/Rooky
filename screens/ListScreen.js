@@ -20,6 +20,7 @@ import * as ImagePicker from 'expo-image-picker';
 import * as ImageManipulator from 'expo-image-manipulator';
 import { uploadImageAsync } from '../helpers/ListingImageUploader';
 import { Ionicons } from '@expo/vector-icons';
+import CreateClass from '../components/CreateClass';
 
 const CustomRating = ({ averageRating }) => {
   return (
@@ -53,6 +54,7 @@ const ListScreen = ({ route, navigation }) => {
   const [description, setDescription] = useState(initialDescription);
   const [editedImage, setEditedImage] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showCreateClassModal, setShowCreateClassModal] = useState(false);
 
   useEffect(() => {
     fetchReviews();
@@ -338,6 +340,14 @@ const ListScreen = ({ route, navigation }) => {
     handleDeleteListing();
   };
 
+  const openCreateClassModal = () => {
+    setShowCreateClassModal(true);
+  };
+  
+  const closeCreateClassModal = () => {
+    setShowCreateClassModal(false);
+  };  
+
   return (
     <SafeAreaView style={styles.container}>
       <TouchableOpacity style={styles.backButton} onPress={handleBackButtonPress}>
@@ -387,7 +397,7 @@ const ListScreen = ({ route, navigation }) => {
       {!(auth.currentUser && auth.currentUser.uid === userId) && (
         <TouchableOpacity style={styles.buttonContainer} onPress={handleBooking}>
           <View style={styles.button}>
-            <Text style={styles.buttonText}>Book A Class</Text>
+            <Text style={styles.buttonText}>Book A Private Class</Text>
           </View>
         </TouchableOpacity>
       )}
@@ -399,12 +409,15 @@ const ListScreen = ({ route, navigation }) => {
         />
       </Modal>
       {isListingOwner && (
-        <TouchableOpacity style={styles.buttonContainer} onPress={handleEditListing}>
-          <View style={styles.button}>
-            <Text style={styles.buttonText}>Edit Listing</Text>
-          </View>
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity style={styles.button} onPress={handleEditListing}>
+          <Text style={styles.buttonText}>Edit Listing</Text>
         </TouchableOpacity>
-      )}
+        <TouchableOpacity style={styles.button} onPress={openCreateClassModal}>
+          <Text style={styles.buttonText}>New Class</Text>
+        </TouchableOpacity>
+      </View>
+    )}
 
       <Modal visible={showEditModal} animationType="slide">
         <KeyboardAvoidingView
@@ -461,6 +474,9 @@ const ListScreen = ({ route, navigation }) => {
           <Text style={styles.deleteModalButtonText}>Cancel</Text>
         </TouchableOpacity>
       </View>
+    </Modal>
+    <Modal visible={showCreateClassModal} animationType="slide">
+      <CreateClass closeModal={closeCreateClassModal} listingId={listingId} />
     </Modal>
     </SafeAreaView>
   );
@@ -530,18 +546,28 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     marginHorizontal: 20,
   },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: -10,
+    marginTop: 6,
+    paddingHorizontal: 20,
+  },
   button: {
+    flex: 1,
     backgroundColor: '#FF385C',
     borderRadius: 10,
     paddingVertical: 15,
     paddingHorizontal: 30,
     marginBottom: 15,
-    marginHorizontal: 20,
+    marginHorizontal: 10,
   },
   buttonText: {
     color: '#fff',
     fontSize: 16,
     fontWeight: 'bold',
+    textAlign: 'center',
   },
   imageContainer: {
     justifyContent: 'center',
@@ -619,16 +645,6 @@ const styles = StyleSheet.create({
   reviewerName: {
     fontSize: 14,
     color: '#888',
-  },
-  buttonContainer: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 25,
-    paddingTop: 20,
   },
   loadingText: {
     fontSize: 16,

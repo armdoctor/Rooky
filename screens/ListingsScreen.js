@@ -66,7 +66,7 @@ const ListingsScreen = ({ route }) => {
   }, [route.params]);
 
   const getCategoryTitle = (category) => {
-    return category.charAt(0).toUpperCase() + category.slice(1) + ' Listings';
+    return category.charAt(0).toUpperCase() + category.slice(1) + " Coaches";
   };
 
   const handleBackButtonPress = () => {
@@ -108,7 +108,7 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 10,
+    marginBottom: 0,
     marginTop: 20,
   },
   backButton: {
@@ -116,7 +116,7 @@ const styles = StyleSheet.create({
     padding: 8,
   },
   heading: {
-    fontSize: 24,
+    fontSize: 22,
     fontWeight: 'bold',
   },
   listingsContainer: {
