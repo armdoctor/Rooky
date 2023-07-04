@@ -1,10 +1,9 @@
-import { StyleSheet, Text, KeyboardAvoidingView, View, TextInput, TouchableOpacity, Modal } from 'react-native';
+import { StyleSheet, Text, KeyboardAvoidingView, View, TextInput, TouchableOpacity, Modal, Alert } from 'react-native';
 import React, { useEffect, useState } from 'react';
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail } from 'firebase/auth';
 import { auth } from '../firebase/firebase';
 import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Ionicons';
-
 
 const LoginScreen = ({ closeModal, targetScreen, navigation }) => {
   const [email, setEmail] = useState('');
@@ -42,6 +41,21 @@ const LoginScreen = ({ closeModal, targetScreen, navigation }) => {
     closeModal(); // Close the modal after signing up
   };
 
+  const handleForgotPassword = () => {
+    if (email === '') {
+      Alert.alert('Error', 'Please enter your email address.');
+      return;
+    }
+
+    sendPasswordResetEmail(auth, email)
+      .then(() => {
+        Alert.alert('Password Reset Email Sent', 'Please check your email to reset your password.');
+      })
+      .catch(error => {
+        Alert.alert('Error', error.message);
+      });
+  };
+
   const handleCloseModal = () => {
     closeModal();
   };
@@ -52,7 +66,7 @@ const LoginScreen = ({ closeModal, targetScreen, navigation }) => {
       behavior='padding'
     >
       <TouchableOpacity onPress={handleCloseModal} style={styles.closeButton}>
-      <Icon name="close" size={24} color="#FF385C" />
+        <Icon name="close" size={24} color="#FF385C" />
       </TouchableOpacity>
       <Text style={styles.header}>Rooky</Text>
       <View style={styles.inputContainer}>
@@ -86,77 +100,87 @@ const LoginScreen = ({ closeModal, targetScreen, navigation }) => {
         >
           <Text style={styles.buttonText}>Sign Up</Text>
         </TouchableOpacity>
+        <Text style={styles.textStyle}>Or</Text>
+        <TouchableOpacity
+          onPress={handleForgotPassword}
+          style={styles.forgotButton}
+        >
+          <Text style={styles.buttonOutlineText}>Forgot Password</Text>
+        </TouchableOpacity>
       </View>
     </KeyboardAvoidingView>
   );
 };
 
 const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-      backgroundColor: '#fff',
-    },
-    closeButton: {
-      position: 'absolute',
-      top: 46,
-      left: 16,
-      padding: 8,
-    },
-    inputContainer: {
-      width: '80%',
-      marginBottom: 20,
-    },
-    input: {
-      backgroundColor: '#f2f2f2',
-      paddingHorizontal: 15,
-      paddingVertical: 10,
-      borderRadius: 8,
-      marginTop: 10,
-    },
-    buttonContainer: {
-      width: '60%',
-      justifyContent: 'center',
-      alignItems: 'center',
-      marginTop: 20,
-    },
-    header: {
-      fontSize: 38,
-      fontWeight: 'bold',
-      top: -35,
-      right: 4,
-    },
-    button: {
-      backgroundColor: '#FF385C',
-      width: '100%',
-      padding: 15,
-      borderRadius: 8,
-      alignItems: 'center',
-      marginTop: 10,
-    },
-    buttonOutline: {
-      backgroundColor: '#fff',
-      marginTop: 10,
-      borderColor: '#FF385C',
-      borderWidth: 2,
-    },
-    buttonText: {
-      color: '#fff',
-      fontWeight: '700',
-      fontSize: 16,
-    },
-    buttonOutlineText: {
-      color: '#FF385C',
-      fontWeight: '700',
-      fontSize: 16,
-    },
-    textStyle: {
-      marginTop: 16,
-      marginBottom: 8,
-      color: '#999',
-      fontSize: 14,
-    },
-  });
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+  },
+  closeButton: {
+    position: 'absolute',
+    top: 46,
+    left: 16,
+    padding: 8,
+  },
+  inputContainer: {
+    width: '80%',
+    marginBottom: 20,
+  },
+  input: {
+    backgroundColor: '#f2f2f2',
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+    borderRadius: 8,
+    marginTop: 10,
+  },
+  buttonContainer: {
+    width: '60%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  header: {
+    fontSize: 38,
+    fontWeight: 'bold',
+    top: -35,
+    right: 4,
+  },
+  button: {
+    backgroundColor: '#FF385C',
+    width: '100%',
+    padding: 15,
+    borderRadius: 8,
+    alignItems: 'center',
+    marginTop: 10,
+  },
+  buttonOutline: {
+    backgroundColor: '#fff',
+    marginTop: 10,
+    borderColor: '#FF385C',
+    borderWidth: 2,
+  },
+  buttonText: {
+    color: '#fff',
+    fontWeight: '700',
+    fontSize: 16,
+  },
+  buttonOutlineText: {
+    color: '#FF385C',
+    fontWeight: '700',
+    fontSize: 16,
+  },
+  forgotButton: {
+    marginTop: 10,
+  },
+  textStyle: {
+    marginTop: 16,
+    marginBottom: 8,
+    color: '#999',
+    fontSize: 14,
+  },
+});
 
 export default LoginScreen;
