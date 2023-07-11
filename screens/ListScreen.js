@@ -21,6 +21,7 @@ import * as ImageManipulator from 'expo-image-manipulator';
 import { uploadImageAsync } from '../helpers/ListingImageUploader';
 import { Ionicons } from '@expo/vector-icons';
 import CreateClass from '../components/CreateClass';
+import ClassCard from '../components/ClassCard';
 
 const CustomRating = ({ averageRating }) => {
   return (
@@ -55,15 +56,37 @@ const ListScreen = ({ route, navigation }) => {
   const [editedImage, setEditedImage] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showCreateClassModal, setShowCreateClassModal] = useState(false);
+  const [classData, setClassData] = useState(null); // State to store class data
 
   useEffect(() => {
     fetchReviews();
     fetchListingImage();
-
     if (userId) {
       countClassesTaught();
     }
   }, [userId]);
+
+  useEffect(() => {
+    fetchClassData(); // Fetch class data when the component mounts
+  }, []);  
+
+  const fetchClassData = async () => {
+    try {
+      const classQuery = query(collection(db, 'classes'), where('listingId', '==', listingId));
+      const classDocsSnapshot = await getDocs(classQuery);
+      if (!classDocsSnapshot.empty) {
+        const classData = classDocsSnapshot.docs[0].data();
+        console.log('Class Document Snapshot:', classData);
+        setClassData(classData); // Set the class data state
+      } else {
+        console.log('Class Document does not exist');
+        setClassData(null); // Set classData to null when the document doesn't exist
+      }
+    } catch (error) {
+      console.error('Error fetching class data:', error);
+      setClassData(null); // Set classData to null in case of an error
+    }
+  };  
 
   const fetchReviews = async () => {
     try {
@@ -372,6 +395,15 @@ const ListScreen = ({ route, navigation }) => {
         )}
         <CustomRating averageRating={averageRating} />
         <Text style={styles.price}>${price}/hr</Text>
+        <View>
+          {classData && (
+            <ClassCard
+              className={classData.className}
+              classPrice={classData.classPrice}
+              classDescription={classData.classDescription}
+            />
+          )}
+        </View>
         <View>
           <Text style={styles.reviewsHeading}>Description:</Text>
           <Text style={styles.description}>{description}</Text>

@@ -10,7 +10,8 @@ import getProfileImage from '../components/ProfileImage';
 
 
 const HomeScreen = ({ navigation }) => {
-  const [categoryList, setCategoryList] = useState([]);
+  const [categorySportsList, setCategorySportsList] = useState([]);
+  const [categoryAcadsList, setCategoryAcadsList] = useState([]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isLoginModalVisible, setLoginModalVisible] = useState(false);
   const [targetScreen, setTargetScreen] = useState('');
@@ -98,17 +99,54 @@ const HomeScreen = ({ navigation }) => {
 
 
   useEffect(() => {
-    const getCategoryList = async () => {
+    const getCategorySportsList = async () => {
       const categoriesCollectionRef = collection(db, 'categories');
-      const data = await getDocs(categoriesCollectionRef);
+      const data = await getDocs(query(categoriesCollectionRef, where('type', '==', 'Sport')));
       const filteredData = data.docs.map((doc) => ({
         ...doc.data(),
         id: doc.id,
       }));
-      setCategoryList(filteredData);
+      setCategorySportsList(filteredData);
     };
   
-    getCategoryList();
+    getCategorySportsList();
+  
+    const unsubscribe = auth.onAuthStateChanged(async (user) => {
+      if (user) {
+        setIsLoggedIn(true);
+  
+        // Fetch the user's profile image URL and image name from Firestore
+        const imageUrl = await getProfileImage(user.uid);
+        setProfileImageURL(imageUrl);
+      } else {
+        setIsLoggedIn(false);
+        setProfileImageURL('');
+        setProfileImageName('');
+      }
+    });
+  
+    return () => {
+      unsubscribe();
+    };
+  }, [currentUser]); // Add currentUser as a dependency
+  
+  useEffect(() => {
+    fetchBookings();
+  }, [currentUser]); // Update the dependency to currentUser
+  
+  
+  useEffect(() => {
+    const getCategoryAcadsList = async () => {
+      const categoriesCollectionRef = collection(db, 'categories');
+      const data = await getDocs(query(categoriesCollectionRef, where('type', '==', 'Academics')));
+      const filteredData = data.docs.map((doc) => ({
+        ...doc.data(),
+        id: doc.id,
+      }));
+      setCategoryAcadsList(filteredData);
+    };
+  
+    getCategoryAcadsList();
   
     const unsubscribe = auth.onAuthStateChanged(async (user) => {
       if (user) {
@@ -216,7 +254,19 @@ const HomeScreen = ({ navigation }) => {
         </TouchableOpacity>
       </View>
       <View style={styles.categoryContainer}>
-        {categoryList.map((category) => (
+        {categorySportsList.map((category) => (
+          <TouchableOpacity
+            key={category.id}
+            style={styles.categoryButton}
+            onPress={() => navigation.navigate('ListingsScreen', { category: category.title })}
+          >
+            <Text style={styles.categoryButtonText}>{category.title}</Text>
+          </TouchableOpacity>
+        ))}
+      </View>
+      <Text style={styles.heading}>Academics</Text>
+      <View style={styles.categoryAcadsContainer}>
+        {categoryAcadsList.map((category) => (
           <TouchableOpacity
             key={category.id}
             style={styles.categoryButton}
@@ -237,7 +287,7 @@ const HomeScreen = ({ navigation }) => {
           <View>
             <Text style={styles.subtext}>No upcoming bookings... yet.</Text>
             <Text style={styles.subtext}>Pick a sport above to book a class!</Text>
-            <Image source={StickFiguresImage} style={styles.stickFigureImage}/>
+            {/*<Image source={StickFiguresImage} style={styles.stickFigureImage}/>*/}
           </View>
         }
         />
@@ -279,6 +329,7 @@ const styles = StyleSheet.create({
     fontSize: 30,
     fontWeight: 'bold',
     marginLeft: 5,
+    marginTop: 5,
   },
   profileButton: {
     paddingHorizontal: 10,
@@ -292,6 +343,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'center',
+  },
+  categoryAcadsContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+    marginTop: 10,
   },
   categoryButton: {
     backgroundColor: '#f2f2f2',
@@ -364,7 +421,7 @@ const styles = StyleSheet.create({
     width: 220,
     height: 220,
     tintColor: '#b5b3b3',
-    marginTop: 60,
+    marginTop: 20,
     marginLeft: 38,
   },
 });
