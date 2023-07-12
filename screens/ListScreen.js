@@ -405,17 +405,6 @@ const ListScreen = ({ route, navigation }) => {
         <CustomRating averageRating={averageRating} />
         <Text style={styles.price}>${price}/hr</Text>
         <View>
-          {classData && (
-            <ClassCard
-              className={classData.className}
-              classPrice={classData.classPrice}
-              classDescription={classData.classDescription}
-              classStart={classData.startDateTime}
-              classEnd={classData.endDateTime}
-            />
-          )}
-        </View>
-        <View>
           <Text style={styles.reviewsHeading}>Description:</Text>
           <Text style={styles.description}>{description}</Text>
         </View>
@@ -439,7 +428,7 @@ const ListScreen = ({ route, navigation }) => {
       </ScrollView>
       {!(auth.currentUser && auth.currentUser.uid === userId) && (
         <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.button} >
+        <TouchableOpacity style={styles.button} onPress={openGroupClassModal}>
           <Text style={styles.buttonText}>Group Class</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.button} onPress={handleBooking}>
@@ -523,6 +512,21 @@ const ListScreen = ({ route, navigation }) => {
     </Modal>
     <Modal visible={showCreateClassModal} animationType="slide">
       <CreateClass closeModal={closeCreateClassModal} listingId={listingId} />
+    </Modal>
+    <Modal visible={showGroupClassModal} animationType="slide">
+    <SafeAreaView>
+    {classData && (
+      <ClassCard 
+        closeModal={closeGroupClassModal} 
+        listingId={listingId} 
+        className={classData.className}
+        classPrice={classData.classPrice}
+        classDescription={classData.classDescription}
+        classStart={classData.startDateTime}
+        classEnd={classData.endDateTime}
+      />
+    )}
+    </SafeAreaView>
     </Modal>
     </SafeAreaView>
   );
