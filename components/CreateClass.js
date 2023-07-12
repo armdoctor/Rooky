@@ -1,12 +1,17 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
+import DateTimePicker from '@react-native-community/datetimepicker';
 import { db } from '../firebase/firebase';
 
 const CreateClass = ({ closeModal, listingId }) => {
   const [className, setClassName] = useState('');
   const [classPrice, setClassPrice] = useState('');
   const [classDescription, setClassDescription] = useState('');
+  const [startDateTime, setStartDateTime] = useState(new Date());
+  const [endDateTime, setEndDateTime] = useState(new Date());
+  const [showStartDateTimePicker, setShowStartDateTimePicker] = useState(false);
+  const [showEndDateTimePicker, setShowEndDateTimePicker] = useState(false);
 
   const handleCreateClass = async () => {
     try {
@@ -14,6 +19,8 @@ const CreateClass = ({ closeModal, listingId }) => {
         className,
         classPrice: parseFloat(classPrice),
         classDescription,
+        startDateTime,
+        endDateTime,
         createdAt: serverTimestamp(),
         listingId,
       };
@@ -25,39 +32,85 @@ const CreateClass = ({ closeModal, listingId }) => {
     }
   };
 
+  const handleStartDateTimeChange = (event, selectedDate) => {
+    const currentDate = selectedDate || startDateTime;
+    setShowStartDateTimePicker(false);
+    setStartDateTime(currentDate);
+  };
+
+  const handleEndDateTimeChange = (event, selectedDate) => {
+    const currentDate = selectedDate || endDateTime;
+    setShowEndDateTimePicker(false);
+    setEndDateTime(currentDate);
+  };
+
   return (
-      <View style={styles.container}>
-        <Text style={styles.title}>Create New Class</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Class Name"
-          placeholderTextColor="#888"
-          value={className}
-          onChangeText={setClassName}
+    <View style={styles.container}>
+      <Text style={styles.title}>Create New Class</Text>
+      <TextInput
+        style={styles.input}
+        placeholder="Class Name"
+        placeholderTextColor="#888"
+        value={className}
+        onChangeText={setClassName}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Price"
+        placeholderTextColor="#888"
+        value={classPrice}
+        onChangeText={setClassPrice}
+        keyboardType="numeric"
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Description"
+        placeholderTextColor="#888"
+        value={classDescription}
+        onChangeText={setClassDescription}
+        multiline
+      />
+      <TouchableOpacity
+        style={styles.dateTimeButton}
+        onPress={() => setShowStartDateTimePicker(true)}
+      >
+        <Text style={styles.dateTimeButtonText}>
+          Start Date & Time: {startDateTime.toLocaleString()}
+        </Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.dateTimeButton}
+        onPress={() => setShowEndDateTimePicker(true)}
+      >
+        <Text style={styles.dateTimeButtonText}>
+          End Date & Time: {endDateTime.toLocaleString()}
+        </Text>
+      </TouchableOpacity>
+      {showStartDateTimePicker && (
+        <DateTimePicker
+          value={startDateTime}
+          mode="datetime"
+          is24Hour={true}
+          display="default"
+          onChange={handleStartDateTimeChange}
         />
-        <TextInput
-          style={styles.input}
-          placeholder="Price"
-          placeholderTextColor="#888"
-          value={classPrice}
-          onChangeText={setClassPrice}
-          keyboardType="numeric"
+      )}
+      {showEndDateTimePicker && (
+        <DateTimePicker
+          value={endDateTime}
+          mode="datetime"
+          is24Hour={true}
+          display="default"
+          onChange={handleEndDateTimeChange}
         />
-        <TextInput
-          style={styles.input}
-          placeholder="Description"
-          placeholderTextColor="#888"
-          value={classDescription}
-          onChangeText={setClassDescription}
-          multiline
-        />
-        <TouchableOpacity style={styles.button} onPress={handleCreateClass}>
-          <Text style={styles.buttonText}>Create Class</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.cancelButton} onPress={closeModal}>
-          <Text style={styles.buttonText}>Cancel</Text>
-        </TouchableOpacity>
-      </View>
+      )}
+      <TouchableOpacity style={styles.button} onPress={handleCreateClass}>
+        <Text style={styles.buttonText}>Create Class</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.cancelButton} onPress={closeModal}>
+        <Text style={styles.buttonText}>Cancel</Text>
+      </TouchableOpacity>
+    </View>
   );
 };
 
@@ -101,6 +154,13 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  dateTimeButton: {
+    marginBottom: 10,
+  },
+  dateTimeButtonText: {
+    fontSize: 14,
+    color: '#000',
   },
 });
 
