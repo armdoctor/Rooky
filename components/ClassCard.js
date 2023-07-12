@@ -1,6 +1,5 @@
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import React from 'react';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 const ClassCard = ({ className, classDescription, classPrice, classStart, classEnd, closeModal }) => {
     const formattedStartDateTime= classStart.toDate().toLocaleString('en-US', {
