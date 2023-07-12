@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, TextInput, TouchableOpacity, View, KeyboardAvoidingView } from 'react-native';
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { db } from '../firebase/firebase';
@@ -45,7 +45,7 @@ const CreateClass = ({ closeModal, listingId }) => {
   };
 
   return (
-    <View style={styles.container}>
+    <KeyboardAvoidingView style={styles.container} behavior="padding" keyboardVerticalOffset={40}>
       <Text style={styles.title}>Create New Class</Text>
       <TextInput
         style={styles.input}
@@ -110,7 +110,7 @@ const CreateClass = ({ closeModal, listingId }) => {
       <TouchableOpacity style={styles.cancelButton} onPress={closeModal}>
         <Text style={styles.buttonText}>Cancel</Text>
       </TouchableOpacity>
-    </View>
+    </KeyboardAvoidingView>
   );
 };
 
