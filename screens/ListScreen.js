@@ -55,7 +55,6 @@ const ListScreen = ({ route, navigation }) => {
   const [description, setDescription] = useState(initialDescription);
   const [editedImage, setEditedImage] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [showCreateClassModal, setShowCreateClassModal] = useState(false);
   const [showGroupClassModal, setShowGroupClassModal] = useState(false);
   const [classData, setClassData] = useState(null); // State to store class data
 
@@ -364,14 +363,6 @@ const ListScreen = ({ route, navigation }) => {
     setShowDeleteModal(false);
     handleDeleteListing();
   };
-
-  const openCreateClassModal = () => {
-    setShowCreateClassModal(true);
-  };
-  
-  const closeCreateClassModal = () => {
-    setShowCreateClassModal(false);
-  };  
   const openGroupClassModal = () => {
     setShowGroupClassModal(true);
   };
@@ -448,8 +439,8 @@ const ListScreen = ({ route, navigation }) => {
         <TouchableOpacity style={styles.button} onPress={handleEditListing}>
           <Text style={styles.buttonText}>Edit Listing</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={openCreateClassModal}>
-          <Text style={styles.buttonText}>New Class</Text>
+        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('MyClassesScreen', { listingId, classData, closeGroupClassModal })}>
+          <Text style={styles.buttonText}>My Classes</Text>
         </TouchableOpacity>
       </View>
     )}
@@ -510,9 +501,6 @@ const ListScreen = ({ route, navigation }) => {
         </TouchableOpacity>
       </View>
     </Modal>
-    <Modal visible={showCreateClassModal} animationType="slide">
-      <CreateClass closeModal={closeCreateClassModal} listingId={listingId} />
-    </Modal>
     <Modal visible={showGroupClassModal} animationType="slide">
     <SafeAreaView>
     {classData && (
@@ -526,6 +514,9 @@ const ListScreen = ({ route, navigation }) => {
         classEnd={classData.endDateTime}
       />
     )}
+     <TouchableOpacity style={styles.cancelDeleteModalButton} onPress={closeGroupClassModal}>
+          <Text style={styles.deleteModalButtonText}>Cancel</Text>
+        </TouchableOpacity>
     </SafeAreaView>
     </Modal>
     </SafeAreaView>

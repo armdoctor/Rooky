@@ -29,9 +29,6 @@ const ClassCard = ({ className, classDescription, classPrice, classStart, classE
         <Text>End: {formattedEndDateTime}</Text>
         <Text>Description: {classDescription}</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.cancelButton} onPress={closeModal}>
-        <Text style={styles.buttonText}>Cancel</Text>
-      </TouchableOpacity>
     </View>
   );
 };

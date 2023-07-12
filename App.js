@@ -12,6 +12,7 @@ import BookingDetailsScreen from './screens/BookingDetailsScreen';
 import ProfileScreen from './screens/ProfileScreen';
 import ListingsScreen from './screens/ListingsScreen';
 import ListScreen from './screens/ListScreen';
+import MyClassesScreen from './screens/MyClassesScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -66,6 +67,11 @@ function App() {
         <Stack.Screen
           name='ListScreen'
           component={ListScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name='MyClassesScreen'
+          component={MyClassesScreen}
           options={{ headerShown: false }}
         />
         <Stack.Screen 
