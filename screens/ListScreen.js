@@ -56,6 +56,7 @@ const ListScreen = ({ route, navigation }) => {
   const [editedImage, setEditedImage] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showCreateClassModal, setShowCreateClassModal] = useState(false);
+  const [showGroupClassModal, setShowGroupClassModal] = useState(false);
   const [classData, setClassData] = useState(null); // State to store class data
 
   useEffect(() => {
@@ -371,6 +372,13 @@ const ListScreen = ({ route, navigation }) => {
   const closeCreateClassModal = () => {
     setShowCreateClassModal(false);
   };  
+  const openGroupClassModal = () => {
+    setShowGroupClassModal(true);
+  };
+  
+  const closeGroupClassModal = () => {
+    setShowGroupClassModal(false);
+  };  
 
   return (
     <SafeAreaView style={styles.container}>
@@ -430,11 +438,14 @@ const ListScreen = ({ route, navigation }) => {
         </View>
       </ScrollView>
       {!(auth.currentUser && auth.currentUser.uid === userId) && (
-        <TouchableOpacity style={styles.buttonContainer} onPress={handleBooking}>
-          <View style={styles.button}>
-            <Text style={styles.buttonText}>Book A Private Class</Text>
-          </View>
+        <View style={styles.buttonContainer}>
+        <TouchableOpacity style={styles.button} >
+          <Text style={styles.buttonText}>Group Class</Text>
         </TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={handleBooking}>
+          <Text style={styles.buttonText}>Private Class</Text>
+        </TouchableOpacity>
+      </View>
       )}
       <Modal visible={showLoginModal} animationType="slide">
         <LoginScreen
@@ -587,14 +598,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: -10,
     marginTop: 6,
-    paddingHorizontal: 20,
+    paddingHorizontal: 0,
   },
   button: {
     flex: 1,
     backgroundColor: '#FF385C',
     borderRadius: 10,
     paddingVertical: 15,
-    paddingHorizontal: 30,
+    paddingHorizontal: 20,
     marginBottom: 15,
     marginHorizontal: 10,
   },
