@@ -18,6 +18,7 @@ const MyClassesScreen = ({ route }) => {
 
   return (
     <SafeAreaView style={styles.container}>
+      <Text style={styles.title}>Group Classes</Text>
       <ClassCard classData={classData} listingId={listingId}/> 
       <TouchableOpacity style={styles.createButton} onPress={openCreateClassModal}>
         <Text style={styles.createButtonText}>Create New Class</Text>
@@ -45,6 +46,12 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 0,
+    marginLeft: 28,
   },
 });
 

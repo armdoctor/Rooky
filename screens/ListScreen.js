@@ -499,10 +499,13 @@ const ListScreen = ({ route, navigation }) => {
       </View>
     </Modal>
     <Modal visible={showGroupClassModal} animationType="slide">
+      <SafeAreaView style={styles.editModalContainer}>
+        <Text style={styles.editModalTitle}>Group Classes</Text>
         <ClassCard classData={classData}/>
         <TouchableOpacity style={styles.cancelDeleteModalButton} onPress={closeGroupClassModal}>
           <Text style={styles.deleteModalButtonText}>Close</Text>
         </TouchableOpacity>
+      </SafeAreaView>
     </Modal>
     </SafeAreaView>
   );
