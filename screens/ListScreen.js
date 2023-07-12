@@ -74,6 +74,7 @@ const ListScreen = ({ route, navigation }) => {
     try {
       const classQuery = query(collection(db, 'classes'), where('listingId', '==', listingId));
       const classDocsSnapshot = await getDocs(classQuery);
+      console.log('Class Docs Snapshot:', classDocsSnapshot.docs);
       if (!classDocsSnapshot.empty) {
         const classData = classDocsSnapshot.docs[0].data();
         console.log('Class Document Snapshot:', classData);
@@ -401,6 +402,8 @@ const ListScreen = ({ route, navigation }) => {
               className={classData.className}
               classPrice={classData.classPrice}
               classDescription={classData.classDescription}
+              classStart={classData.startDateTime}
+              classEnd={classData.endDateTime}
             />
           )}
         </View>
