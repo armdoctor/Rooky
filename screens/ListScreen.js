@@ -56,7 +56,7 @@ const ListScreen = ({ route, navigation }) => {
   const [editedImage, setEditedImage] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showGroupClassModal, setShowGroupClassModal] = useState(false);
-  const [classData, setClassData] = useState(null); // State to store class data
+  const [classData, setClassData] = useState([]); // Updated state to store class data
 
   useEffect(() => {
     fetchReviews();
@@ -64,11 +64,8 @@ const ListScreen = ({ route, navigation }) => {
     if (userId) {
       countClassesTaught();
     }
-  }, [userId]);
-
-  useEffect(() => {
     fetchClassData(); // Fetch class data when the component mounts
-  }, []);  
+  }, [userId]);
 
   const fetchClassData = async () => {
     try {
@@ -76,18 +73,18 @@ const ListScreen = ({ route, navigation }) => {
       const classDocsSnapshot = await getDocs(classQuery);
       console.log('Class Docs Snapshot:', classDocsSnapshot.docs);
       if (!classDocsSnapshot.empty) {
-        const classData = classDocsSnapshot.docs[0].data();
+        const classData = classDocsSnapshot.docs.map((doc) => doc.data());
         console.log('Class Document Snapshot:', classData);
         setClassData(classData); // Set the class data state
       } else {
-        console.log('Class Document does not exist');
-        setClassData(null); // Set classData to null when the document doesn't exist
+        console.log('Class Documents do not exist');
+        setClassData([]); // Set classData to an empty array when no documents exist
       }
     } catch (error) {
       console.error('Error fetching class data:', error);
-      setClassData(null); // Set classData to null in case of an error
+      setClassData([]); // Set classData to an empty array in case of an error
     }
-  };  
+  };
 
   const fetchReviews = async () => {
     try {
@@ -420,7 +417,7 @@ const ListScreen = ({ route, navigation }) => {
       {!(auth.currentUser && auth.currentUser.uid === userId) && (
         <View style={styles.buttonContainer}>
         <TouchableOpacity style={styles.button} onPress={openGroupClassModal}>
-          <Text style={styles.buttonText}>Group Class</Text>
+          <Text style={styles.buttonText}>Group Classes</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.button} onPress={handleBooking}>
           <Text style={styles.buttonText}>Private Class</Text>
@@ -502,22 +499,10 @@ const ListScreen = ({ route, navigation }) => {
       </View>
     </Modal>
     <Modal visible={showGroupClassModal} animationType="slide">
-    <SafeAreaView>
-    {classData && (
-      <ClassCard 
-        closeModal={closeGroupClassModal} 
-        listingId={listingId} 
-        className={classData.className}
-        classPrice={classData.classPrice}
-        classDescription={classData.classDescription}
-        classStart={classData.startDateTime}
-        classEnd={classData.endDateTime}
-      />
-    )}
-     <TouchableOpacity style={styles.cancelDeleteModalButton} onPress={closeGroupClassModal}>
-          <Text style={styles.deleteModalButtonText}>Cancel</Text>
+        <ClassCard classData={classData}/>
+        <TouchableOpacity style={styles.cancelDeleteModalButton} onPress={closeGroupClassModal}>
+          <Text style={styles.deleteModalButtonText}>Close</Text>
         </TouchableOpacity>
-    </SafeAreaView>
     </Modal>
     </SafeAreaView>
   );

@@ -1,5 +1,5 @@
-import { StyleSheet, Text, View, Modal, TouchableOpacity } from 'react-native';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, Text, View, Modal, TouchableOpacity, FlatList } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import ClassCard from '../components/ClassCard';
 import CreateClass from '../components/CreateClass';
@@ -17,21 +17,10 @@ const MyClassesScreen = ({ route }) => {
   };
 
   return (
-    <SafeAreaView>
-      <View>
-        {classData && (
-          <ClassCard
-            listingId={listingId}
-            className={classData.className}
-            classPrice={classData.classPrice}
-            classDescription={classData.classDescription}
-            classStart={classData.startDateTime}
-            classEnd={classData.endDateTime}
-          />
-        )}
-      </View>
-      <TouchableOpacity style={styles.cancelDeleteModalButton} onPress={openCreateClassModal}>
-        <Text style={styles.deleteModalButtonText}>Create New Class</Text>
+    <SafeAreaView style={styles.container}>
+      <ClassCard classData={classData} listingId={listingId}/> 
+      <TouchableOpacity style={styles.createButton} onPress={openCreateClassModal}>
+        <Text style={styles.createButtonText}>Create New Class</Text>
       </TouchableOpacity>
       <Modal visible={showCreateClassModal} animationType="slide">
         <CreateClass closeModal={closeCreateClassModal} />
@@ -40,19 +29,23 @@ const MyClassesScreen = ({ route }) => {
   );
 };
 
-export default MyClassesScreen;
-
 const styles = StyleSheet.create({
-  cancelDeleteModalButton: {
+  container: {
+    flex: 1,
+  },
+  createButton: {
     backgroundColor: '#FF385C',
     borderRadius: 10,
     paddingVertical: 15,
     paddingHorizontal: 30,
     marginBottom: 15,
+    alignSelf: 'center',
   },
-  deleteModalButtonText: {
+  createButtonText: {
     color: '#fff',
     fontSize: 16,
     fontWeight: 'bold',
   },
 });
+
+export default MyClassesScreen;

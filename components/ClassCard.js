@@ -1,59 +1,80 @@
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import React from 'react';
+import { StyleSheet, Text, View, FlatList, TouchableOpacity } from 'react-native';
 
-const ClassCard = ({ className, classDescription, classPrice, classStart, classEnd, closeModal }) => {
-    const formattedStartDateTime= classStart.toDate().toLocaleString('en-US', {
-        day: 'numeric',
-        month: 'long',
-        year: 'numeric',
-        hour: 'numeric',
-        minute: 'numeric',
-        hour12: true,
-    });
-    const formattedEndDateTime= classEnd.toDate().toLocaleString('en-US', {
-        day: 'numeric',
-        month: 'long',
-        year: 'numeric',
-        hour: 'numeric',
-        minute: 'numeric',
-        hour12: true,
-    });
+const ClassCard = ({ classData }) => {
+  const renderItem = ({ item }) => {
+    const formattedStartDateTime = item.startDateTime ? item.startDateTime.toDate().toLocaleString('en-US', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric',
+      hour12: true,
+    }) : '';
+    const formattedEndDateTime = item.endDateTime ? item.endDateTime.toDate().toLocaleString('en-US', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric',
+      hour12: true,
+    }) : '';    
 
-  return (
-    <View>
+    return (
       <TouchableOpacity style={styles.classItem}>
-        <Text>Name: {className}</Text>
-        <Text>Price: {classPrice}</Text>
+        <Text>Name: {item.className}</Text>
+        <Text>Price: {item.classPrice}</Text>
         <Text>Start: {formattedStartDateTime}</Text>
         <Text>End: {formattedEndDateTime}</Text>
-        <Text>Description: {classDescription}</Text>
+        <Text>Description: {item.classDescription}</Text>
       </TouchableOpacity>
+    );
+  };
+
+  return (
+    <View style={styles.container}>
+      <Text style={styles.title}>Group Classes</Text>
+      <FlatList
+        data={classData}
+        renderItem={renderItem}
+        keyExtractor={(item) => item.classId}
+        contentContainerStyle={styles.listContainer}
+      />
     </View>
   );
 };
 
-export default ClassCard;
-
 const styles = StyleSheet.create({
-    classContainer: {
-      paddingHorizontal: 10,
-    },
-    classItem: {
-      backgroundColor: '#f7f7f7',
-      padding: 20,
-      marginBottom: 10,
-      borderRadius: 8,
-    },
-    cancelButton: {
-      backgroundColor: '#ccc',
-      borderRadius: 10,
-      paddingVertical: 15,
-      paddingHorizontal: 30,
-      marginBottom: 15,
-    },
-    buttonText: {
-      color: '#fff',
-      fontSize: 16,
-      fontWeight: 'bold',
-    },
+  container: {
+    flex: 1,
+    padding: 20,
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  listContainer: {
+    flexGrow: 1,
+  },
+  classItem: {
+    backgroundColor: '#F5F5F5',
+    borderRadius: 10,
+    padding: 10,
+    marginBottom: 10,
+  },
+  closeButton: {
+    backgroundColor: '#FF385C',
+    borderRadius: 10,
+    padding: 10,
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  closeButtonText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
 });
+
+export default ClassCard;
