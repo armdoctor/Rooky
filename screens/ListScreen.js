@@ -55,8 +55,8 @@ const ListScreen = ({ route, navigation }) => {
   const [description, setDescription] = useState(initialDescription);
   const [editedImage, setEditedImage] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [showCreateClassModal, setShowCreateClassModal] = useState(false);
-  const [classData, setClassData] = useState(null); // State to store class data
+  const [showGroupClassModal, setShowGroupClassModal] = useState(false);
+  const [classData, setClassData] = useState([]); // Updated state to store class data
 
   useEffect(() => {
     fetchReviews();
@@ -64,29 +64,27 @@ const ListScreen = ({ route, navigation }) => {
     if (userId) {
       countClassesTaught();
     }
-  }, [userId]);
-
-  useEffect(() => {
     fetchClassData(); // Fetch class data when the component mounts
-  }, []);  
+  }, [userId]);
 
   const fetchClassData = async () => {
     try {
       const classQuery = query(collection(db, 'classes'), where('listingId', '==', listingId));
       const classDocsSnapshot = await getDocs(classQuery);
+      console.log('Class Docs Snapshot:', classDocsSnapshot.docs);
       if (!classDocsSnapshot.empty) {
-        const classData = classDocsSnapshot.docs[0].data();
+        const classData = classDocsSnapshot.docs.map((doc) => doc.data());
         console.log('Class Document Snapshot:', classData);
         setClassData(classData); // Set the class data state
       } else {
-        console.log('Class Document does not exist');
-        setClassData(null); // Set classData to null when the document doesn't exist
+        console.log('Class Documents do not exist');
+        setClassData([]); // Set classData to an empty array when no documents exist
       }
     } catch (error) {
       console.error('Error fetching class data:', error);
-      setClassData(null); // Set classData to null in case of an error
+      setClassData([]); // Set classData to an empty array in case of an error
     }
-  };  
+  };
 
   const fetchReviews = async () => {
     try {
@@ -362,13 +360,12 @@ const ListScreen = ({ route, navigation }) => {
     setShowDeleteModal(false);
     handleDeleteListing();
   };
-
-  const openCreateClassModal = () => {
-    setShowCreateClassModal(true);
+  const openGroupClassModal = () => {
+    setShowGroupClassModal(true);
   };
   
-  const closeCreateClassModal = () => {
-    setShowCreateClassModal(false);
+  const closeGroupClassModal = () => {
+    setShowGroupClassModal(false);
   };  
 
   return (
@@ -396,15 +393,6 @@ const ListScreen = ({ route, navigation }) => {
         <CustomRating averageRating={averageRating} />
         <Text style={styles.price}>${price}/hr</Text>
         <View>
-          {classData && (
-            <ClassCard
-              className={classData.className}
-              classPrice={classData.classPrice}
-              classDescription={classData.classDescription}
-            />
-          )}
-        </View>
-        <View>
           <Text style={styles.reviewsHeading}>Description:</Text>
           <Text style={styles.description}>{description}</Text>
         </View>
@@ -427,11 +415,14 @@ const ListScreen = ({ route, navigation }) => {
         </View>
       </ScrollView>
       {!(auth.currentUser && auth.currentUser.uid === userId) && (
-        <TouchableOpacity style={styles.buttonContainer} onPress={handleBooking}>
-          <View style={styles.button}>
-            <Text style={styles.buttonText}>Book A Private Class</Text>
-          </View>
+        <View style={styles.buttonContainer}>
+        <TouchableOpacity style={styles.button} onPress={openGroupClassModal}>
+          <Text style={styles.buttonText}>Group Classes</Text>
         </TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={handleBooking}>
+          <Text style={styles.buttonText}>Private Class</Text>
+        </TouchableOpacity>
+      </View>
       )}
       <Modal visible={showLoginModal} animationType="slide">
         <LoginScreen
@@ -445,8 +436,8 @@ const ListScreen = ({ route, navigation }) => {
         <TouchableOpacity style={styles.button} onPress={handleEditListing}>
           <Text style={styles.buttonText}>Edit Listing</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={openCreateClassModal}>
-          <Text style={styles.buttonText}>New Class</Text>
+        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('MyClassesScreen', { listingId, classData, closeGroupClassModal })}>
+          <Text style={styles.buttonText}>My Classes</Text>
         </TouchableOpacity>
       </View>
     )}
@@ -507,8 +498,14 @@ const ListScreen = ({ route, navigation }) => {
         </TouchableOpacity>
       </View>
     </Modal>
-    <Modal visible={showCreateClassModal} animationType="slide">
-      <CreateClass closeModal={closeCreateClassModal} listingId={listingId} />
+    <Modal visible={showGroupClassModal} animationType="slide">
+      <SafeAreaView style={styles.editModalContainer}>
+        <Text style={styles.editModalTitle}>Group Classes</Text>
+        <ClassCard classData={classData}/>
+        <TouchableOpacity style={styles.cancelDeleteModalButton} onPress={closeGroupClassModal}>
+          <Text style={styles.deleteModalButtonText}>Close</Text>
+        </TouchableOpacity>
+      </SafeAreaView>
     </Modal>
     </SafeAreaView>
   );
@@ -584,14 +581,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: -10,
     marginTop: 6,
-    paddingHorizontal: 20,
+    paddingHorizontal: 0,
   },
   button: {
     flex: 1,
     backgroundColor: '#FF385C',
     borderRadius: 10,
     paddingVertical: 15,
-    paddingHorizontal: 30,
+    paddingHorizontal: 20,
     marginBottom: 15,
     marginHorizontal: 10,
   },
