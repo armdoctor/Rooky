@@ -500,7 +500,7 @@ const ListScreen = ({ route, navigation }) => {
     </Modal>
     <Modal visible={showGroupClassModal} animationType="slide">
       <SafeAreaView style={styles.editModalContainer}>
-        <Text style={styles.editModalTitle}>Group Classes</Text>
+        <Text style={styles.groupClassesModalTitle}>Group Classes</Text>
         <ClassCard classData={classData}/>
         <TouchableOpacity style={styles.cancelDeleteModalButton} onPress={closeGroupClassModal}>
           <Text style={styles.deleteModalButtonText}>Close</Text>
@@ -529,9 +529,17 @@ const styles = StyleSheet.create({
   editModalTitle: {
     fontSize: 24,
     fontWeight: 'bold',
-    marginTop: -5,
+    top: 20,
     marginBottom: 20,
     marginLeft: 20,
+    color: '#333',
+  },
+  groupClassesModalTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    top: 10,
+    marginBottom: 10,
+    marginLeft: 24,
     color: '#333',
   },
   editModalLabel: {
