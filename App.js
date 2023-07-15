@@ -16,6 +16,8 @@ import MyClassesScreen from './screens/MyClassesScreen';
 
 const Stack = createNativeStackNavigator();
 
+// test comment for first commit (to be removed)
+
 function App() {
   return (
     <NavigationContainer>
