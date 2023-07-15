@@ -153,7 +153,7 @@ const NewListingScreen = () => {
               ))}
             </Picker>
             <TextInput
-              placeholder="Price"
+              placeholder='Price for Private Class Per Hour'
               value={price}
               onChangeText={(text) => setPrice(text)}
               style={styles.input}

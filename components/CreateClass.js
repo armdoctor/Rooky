@@ -46,7 +46,7 @@ const CreateClass = ({ closeModal, listingId }) => {
 
   return (
     <KeyboardAvoidingView style={styles.container} behavior="padding" keyboardVerticalOffset={40}>
-      <Text style={styles.title}>Create New Class</Text>
+      <Text style={styles.title}> New Group Class</Text>
       <TextInput
         style={styles.input}
         placeholder="Class Name"

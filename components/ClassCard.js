@@ -1,32 +1,40 @@
 import React from 'react';
 import { StyleSheet, Text, View, FlatList, TouchableOpacity } from 'react-native';
 
-const ClassCard = ({ classData }) => {
+const ClassCard = ({ classData, navigation, closeModal }) => {
   const renderItem = ({ item }) => {
-    const formattedStartDateTime = item.startDateTime ? item.startDateTime.toDate().toLocaleString('en-US', {
-      day: 'numeric',
-      month: 'long',
-      year: 'numeric',
-      hour: 'numeric',
-      minute: 'numeric',
-      hour12: true,
-    }) : '';
-    const formattedEndDateTime = item.endDateTime ? item.endDateTime.toDate().toLocaleString('en-US', {
-      day: 'numeric',
-      month: 'long',
-      year: 'numeric',
-      hour: 'numeric',
-      minute: 'numeric',
-      hour12: true,
-    }) : '';    
+    const formattedStartDateTime = item.startDateTime
+      ? item.startDateTime.toDate().toLocaleString('en-US', {
+          hour: 'numeric',
+          minute: 'numeric',
+          hour12: true,
+          month: 'long',
+          day: 'numeric',
+          year: 'numeric',
+        })
+      : '';
+    const formattedEndDateTime = item.endDateTime
+      ? item.endDateTime.toDate().toLocaleString('en-US', {
+          hour: 'numeric',
+          minute: 'numeric',
+          hour12: true,
+          month: 'long',
+          day: 'numeric',
+          year: 'numeric',
+        })
+      : '';
+
+      const handleClassDetails = () => {
+        navigation.navigate('ClassDetailsScreen', { classData: item });
+        closeModal();
+      }
 
     return (
-      <TouchableOpacity style={styles.classItem}>
-        <Text>Name: {item.className}</Text>
-        <Text>Price: {item.classPrice}</Text>
-        <Text>Start: {formattedStartDateTime}</Text>
-        <Text>End: {formattedEndDateTime}</Text>
-        <Text>Description: {item.classDescription}</Text>
+      <TouchableOpacity style={styles.classItem} onPress={handleClassDetails}>
+        <Text style={styles.className}>{item.className}</Text>
+        <Text style={styles.price}>${item.classPrice}</Text>
+        <Text style={styles.date}>Start: {formattedStartDateTime}</Text>
+        <Text style={styles.date}>End: {formattedEndDateTime}</Text>
       </TouchableOpacity>
     );
   };
@@ -52,22 +60,37 @@ const styles = StyleSheet.create({
     flexGrow: 1,
   },
   classItem: {
-    backgroundColor: '#F5F5F5',
+    backgroundColor: '#ededed',
     borderRadius: 10,
-    padding: 10,
+    padding: 20,
+    marginBottom: 20,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 2,
+  },
+  className: {
+    fontSize: 18,
+    fontWeight: 'bold',
     marginBottom: 10,
   },
-  closeButton: {
-    backgroundColor: '#FF385C',
-    borderRadius: 10,
-    padding: 10,
-    alignItems: 'center',
-    marginTop: 20,
+  date: {
+    fontSize: 14,
+    color: '#888888',
+    marginBottom: 10,
   },
-  closeButtonText: {
-    color: '#FFFFFF',
+  price: {
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: '500',
+    marginBottom: 10,
+  },
+  description: {
+    fontSize: 14,
+    color: '#555555',
   },
 });
 

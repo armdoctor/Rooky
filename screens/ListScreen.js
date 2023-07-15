@@ -391,7 +391,7 @@ const ListScreen = ({ route, navigation }) => {
           <Text style={styles.classesTaught}>{classesTaught} Classes Taught</Text>
         )}
         <CustomRating averageRating={averageRating} />
-        <Text style={styles.price}>${price}/hr</Text>
+        <Text style={styles.price}>Private Class: ${price}/hr</Text>
         <View>
           <Text style={styles.reviewsHeading}>Description:</Text>
           <Text style={styles.description}>{description}</Text>
@@ -437,7 +437,7 @@ const ListScreen = ({ route, navigation }) => {
           <Text style={styles.buttonText}>Edit Listing</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('MyClassesScreen', { listingId, classData, closeGroupClassModal })}>
-          <Text style={styles.buttonText}>My Classes</Text>
+          <Text style={styles.buttonText}>Group Classes</Text>
         </TouchableOpacity>
       </View>
     )}
@@ -499,12 +499,14 @@ const ListScreen = ({ route, navigation }) => {
       </View>
     </Modal>
     <Modal visible={showGroupClassModal} animationType="slide">
-      <SafeAreaView style={styles.editModalContainer}>
-        <Text style={styles.editModalTitle}>Group Classes</Text>
-        <ClassCard classData={classData}/>
-        <TouchableOpacity style={styles.cancelDeleteModalButton} onPress={closeGroupClassModal}>
-          <Text style={styles.deleteModalButtonText}>Close</Text>
+      <SafeAreaView style={styles.groupClassesModalContainer}>
+        <Text style={styles.groupClassesModalTitle}>Group Classes</Text>
+        <ClassCard classData={classData} navigation={navigation} closeModal={closeGroupClassModal}/>
+        <View style={styles.groupClassesButtonContainer}>
+        <TouchableOpacity style={styles.groupClassesModalButton} onPress={closeGroupClassModal}>
+          <Text style={styles.groupClassesModalButtonText}>Back</Text>
         </TouchableOpacity>
+        </View>
       </SafeAreaView>
     </Modal>
     </SafeAreaView>
@@ -526,12 +528,28 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
   },
+  groupClassesModalContainer: {
+    flex: 1,
+    marginTop: Platform.OS === 'ios' ? 40 : 0,
+    padding: 20,
+    backgroundColor: '#fff',
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+  },
   editModalTitle: {
     fontSize: 24,
     fontWeight: 'bold',
-    marginTop: -5,
+    top: 20,
     marginBottom: 20,
     marginLeft: 20,
+    color: '#333',
+  },
+  groupClassesModalTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    top: 10,
+    marginBottom: 10,
+    marginLeft: 24,
     color: '#333',
   },
   editModalLabel: {
@@ -719,6 +737,25 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   deleteModalButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  groupClassesModalButton: {
+    backgroundColor: '#FF385C',
+    borderRadius: 10,
+    width: '50%',
+    alignItems: 'center',
+    paddingVertical: 15,
+    paddingHorizontal: 30,
+    marginBottom: 15,
+  },
+  groupClassesButtonContainer: {
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  groupClassesModalButtonText: {
     color: '#fff',
     fontSize: 16,
     fontWeight: 'bold',

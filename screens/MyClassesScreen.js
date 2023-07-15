@@ -21,7 +21,7 @@ const MyClassesScreen = ({ route }) => {
       <Text style={styles.title}>Group Classes</Text>
       <ClassCard classData={classData} listingId={listingId}/> 
       <TouchableOpacity style={styles.createButton} onPress={openCreateClassModal}>
-        <Text style={styles.createButtonText}>Create New Class</Text>
+        <Text style={styles.createButtonText}> New Group Class</Text>
       </TouchableOpacity>
       <Modal visible={showCreateClassModal} animationType="slide">
         <CreateClass closeModal={closeCreateClassModal} />
