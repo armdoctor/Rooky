@@ -391,7 +391,7 @@ const ListScreen = ({ route, navigation }) => {
           <Text style={styles.classesTaught}>{classesTaught} Classes Taught</Text>
         )}
         <CustomRating averageRating={averageRating} />
-        <Text style={styles.price}>${price}/hr</Text>
+        <Text style={styles.price}>Private Class: ${price}/hr</Text>
         <View>
           <Text style={styles.reviewsHeading}>Description:</Text>
           <Text style={styles.description}>{description}</Text>
@@ -437,7 +437,7 @@ const ListScreen = ({ route, navigation }) => {
           <Text style={styles.buttonText}>Edit Listing</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('MyClassesScreen', { listingId, classData, closeGroupClassModal })}>
-          <Text style={styles.buttonText}>My Classes</Text>
+          <Text style={styles.buttonText}>Group Classes</Text>
         </TouchableOpacity>
       </View>
     )}
@@ -501,7 +501,7 @@ const ListScreen = ({ route, navigation }) => {
     <Modal visible={showGroupClassModal} animationType="slide">
       <SafeAreaView style={styles.groupClassesModalContainer}>
         <Text style={styles.groupClassesModalTitle}>Group Classes</Text>
-        <ClassCard classData={classData}/>
+        <ClassCard classData={classData} navigation={navigation} closeModal={closeGroupClassModal}/>
         <View style={styles.groupClassesButtonContainer}>
         <TouchableOpacity style={styles.groupClassesModalButton} onPress={closeGroupClassModal}>
           <Text style={styles.groupClassesModalButtonText}>Back</Text>

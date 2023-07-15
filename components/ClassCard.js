@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View, FlatList, TouchableOpacity } from 'react-native';
 
-const ClassCard = ({ classData }) => {
+const ClassCard = ({ classData, navigation, closeModal }) => {
   const renderItem = ({ item }) => {
     const formattedStartDateTime = item.startDateTime
       ? item.startDateTime.toDate().toLocaleString('en-US', {
@@ -24,12 +24,17 @@ const ClassCard = ({ classData }) => {
         })
       : '';
 
+      const handleClassDetails = () => {
+        navigation.navigate('ClassDetailsScreen', { classData: item });
+        closeModal();
+      }
+
     return (
-      <TouchableOpacity style={styles.classItem}>
+      <TouchableOpacity style={styles.classItem} onPress={handleClassDetails}>
         <Text style={styles.className}>{item.className}</Text>
-        <Text style={styles.date}>{formattedStartDateTime}</Text>
         <Text style={styles.price}>${item.classPrice}</Text>
-        <Text style={styles.description}>{item.classDescription}</Text>
+        <Text style={styles.date}>Start: {formattedStartDateTime}</Text>
+        <Text style={styles.date}>End: {formattedEndDateTime}</Text>
       </TouchableOpacity>
     );
   };
@@ -80,7 +85,7 @@ const styles = StyleSheet.create({
   },
   price: {
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: '500',
     marginBottom: 10,
   },
   description: {
