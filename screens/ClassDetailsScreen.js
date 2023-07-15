@@ -31,6 +31,7 @@ const ClassDetailsScreen = ({ route }) => {
         <Text>{classData.classPrice}</Text>
         <Text>{classData.classDescription}</Text>
         <Text>{formattedStartDateTime}</Text>
+        <Text>{formattedEndDateTime}</Text>
       </SafeAreaView>
     );
   };  
