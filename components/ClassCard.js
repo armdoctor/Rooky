@@ -33,8 +33,7 @@ const ClassCard = ({ classData, navigation, closeModal }) => {
       <TouchableOpacity style={styles.classItem} onPress={handleClassDetails}>
         <Text style={styles.className}>{item.className}</Text>
         <Text style={styles.price}>${item.classPrice}</Text>
-        <Text style={styles.date}>Start: {formattedStartDateTime}</Text>
-        <Text style={styles.date}>End: {formattedEndDateTime}</Text>
+        <Text style={styles.date}>{formattedStartDateTime}</Text>
       </TouchableOpacity>
     );
   };
@@ -62,7 +61,8 @@ const styles = StyleSheet.create({
   classItem: {
     backgroundColor: '#ededed',
     borderRadius: 10,
-    padding: 20,
+    paddingHorizontal: 20,
+    paddingVertical: 14,
     marginBottom: 20,
     shadowColor: '#000',
     shadowOffset: {
@@ -79,13 +79,13 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   date: {
-    fontSize: 14,
+    fontSize: 16,
     color: '#888888',
-    marginBottom: 10,
+    marginBottom: 0,
   },
   price: {
-    fontSize: 16,
-    fontWeight: '500',
+    fontSize: 18,
+    fontWeight: '400',
     marginBottom: 10,
   },
   description: {

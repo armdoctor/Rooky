@@ -28,7 +28,8 @@ const ClassDetailsScreen = ({ route }) => {
     return (
       <SafeAreaView>
         <Text>{classData.className}</Text>
-        <Text>{classData.classPrice}</Text>
+        <Text>${classData.classPrice}</Text>
+        <Text>Description:</Text>
         <Text>{classData.classDescription}</Text>
         <Text>{formattedStartDateTime}</Text>
         <Text>{formattedEndDateTime}</Text>
