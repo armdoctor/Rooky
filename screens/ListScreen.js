@@ -499,12 +499,14 @@ const ListScreen = ({ route, navigation }) => {
       </View>
     </Modal>
     <Modal visible={showGroupClassModal} animationType="slide">
-      <SafeAreaView style={styles.editModalContainer}>
+      <SafeAreaView style={styles.groupClassesModalContainer}>
         <Text style={styles.groupClassesModalTitle}>Group Classes</Text>
         <ClassCard classData={classData}/>
-        <TouchableOpacity style={styles.cancelDeleteModalButton} onPress={closeGroupClassModal}>
-          <Text style={styles.deleteModalButtonText}>Close</Text>
+        <View style={styles.groupClassesButtonContainer}>
+        <TouchableOpacity style={styles.groupClassesModalButton} onPress={closeGroupClassModal}>
+          <Text style={styles.groupClassesModalButtonText}>Back</Text>
         </TouchableOpacity>
+        </View>
       </SafeAreaView>
     </Modal>
     </SafeAreaView>
@@ -519,6 +521,14 @@ const styles = StyleSheet.create({
     paddingLeft: 20,
   },
   editModalContainer: {
+    flex: 1,
+    marginTop: Platform.OS === 'ios' ? 40 : 0,
+    padding: 20,
+    backgroundColor: '#fff',
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+  },
+  groupClassesModalContainer: {
     flex: 1,
     marginTop: Platform.OS === 'ios' ? 40 : 0,
     padding: 20,
@@ -727,6 +737,25 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   deleteModalButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  groupClassesModalButton: {
+    backgroundColor: '#FF385C',
+    borderRadius: 10,
+    width: '50%',
+    alignItems: 'center',
+    paddingVertical: 15,
+    paddingHorizontal: 30,
+    marginBottom: 15,
+  },
+  groupClassesButtonContainer: {
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  groupClassesModalButtonText: {
     color: '#fff',
     fontSize: 16,
     fontWeight: 'bold',
