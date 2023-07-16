@@ -436,7 +436,7 @@ const ListScreen = ({ route, navigation }) => {
         <TouchableOpacity style={styles.button} onPress={handleEditListing}>
           <Text style={styles.buttonText}>Edit Listing</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('MyClassesScreen', { listingId, classData, closeGroupClassModal })}>
+        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('MyClassesScreen', { listingId, classData, closeGroupClassModal, navigation })}>
           <Text style={styles.buttonText}>Group Classes</Text>
         </TouchableOpacity>
       </View>

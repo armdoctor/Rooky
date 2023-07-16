@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, Modal, TouchableOpacity, FlatList } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import ClassCard from '../components/ClassCard';
+import ClassCardCoach from '../components/ClassCardCoach';
 import CreateClass from '../components/CreateClass';
 
 const MyClassesScreen = ({ route }) => {
-  const { listingId, classData } = route.params;
+  const { listingId, classData, navigation } = route.params;
   const [showCreateClassModal, setShowCreateClassModal] = useState(false);
 
   const openCreateClassModal = () => {
@@ -19,12 +19,12 @@ const MyClassesScreen = ({ route }) => {
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.title}>Group Classes</Text>
-      <ClassCard classData={classData} listingId={listingId}/> 
+      <ClassCardCoach classData={classData} listingId={listingId} navigation={navigation}/> 
       <TouchableOpacity style={styles.createButton} onPress={openCreateClassModal}>
         <Text style={styles.createButtonText}> New Group Class</Text>
       </TouchableOpacity>
       <Modal visible={showCreateClassModal} animationType="slide">
-        <CreateClass closeModal={closeCreateClassModal} />
+        <CreateClass closeModal={closeCreateClassModal} listingId={listingId} />
       </Modal>
     </SafeAreaView>
   );

@@ -7,6 +7,7 @@ import { db } from '../firebase/firebase';
 const CreateClass = ({ closeModal, listingId }) => {
   const [className, setClassName] = useState('');
   const [classPrice, setClassPrice] = useState('');
+  const [classSeats, setClassSeats] = useState('');
   const [classDescription, setClassDescription] = useState('');
   const [startDateTime, setStartDateTime] = useState(new Date());
   const [endDateTime, setEndDateTime] = useState(new Date());
@@ -18,6 +19,7 @@ const CreateClass = ({ closeModal, listingId }) => {
       const classData = {
         className,
         classPrice: parseFloat(classPrice),
+        classSeats: parseFloat(classSeats),
         classDescription,
         startDateTime,
         endDateTime,
@@ -60,6 +62,14 @@ const CreateClass = ({ closeModal, listingId }) => {
         placeholderTextColor="#888"
         value={classPrice}
         onChangeText={setClassPrice}
+        keyboardType="numeric"
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Number of Seats"
+        placeholderTextColor="#888"
+        value={classSeats}
+        onChangeText={setClassSeats}
         keyboardType="numeric"
       />
       <TextInput
