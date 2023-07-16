@@ -437,7 +437,7 @@ const ListScreen = ({ route, navigation }) => {
           <Text style={styles.buttonText}>Edit Listing</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('MyClassesScreen', { listingId, classData, closeGroupClassModal, navigation })}>
-          <Text style={styles.buttonText}>Group Classes</Text>
+          <Text style={styles.buttonText}>My Group Classes</Text>
         </TouchableOpacity>
       </View>
     )}
@@ -608,7 +608,7 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     paddingHorizontal: 20,
     marginBottom: 15,
-    marginHorizontal: 10,
+    marginHorizontal: 7,
   },
   buttonText: {
     color: '#fff',
