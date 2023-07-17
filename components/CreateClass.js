@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, TextInput, TouchableOpacity, View, KeyboardAvoidingView } from 'react-native';
-import { addDoc, collection, doc, serverTimestamp } from 'firebase/firestore';
+import { addDoc, collection, doc, serverTimestamp,updateDoc } from 'firebase/firestore';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { db } from '../firebase/firebase';
 
@@ -26,14 +26,19 @@ const CreateClass = ({ closeModal, listingId }) => {
         createdAt: serverTimestamp(),
         listingId,
       };
-
-      await addDoc(collection(db, 'classes'), classData);
+  
+      const docRef = await addDoc(collection(db, 'classes'), classData);
+      const classId = docRef.id; // Retrieve the automatically generated document ID
+  
+      // Update the 'classId' field in the document
+      await updateDoc(doc(db, 'classes', classId), { classId });
+  
       closeModal();
     } catch (error) {
       console.error('Error creating class:', error);
     }
   };
-
+  
   const handleStartDateTimeChange = (event, selectedDate) => {
     const currentDate = selectedDate || startDateTime;
     setShowStartDateTimePicker(false);

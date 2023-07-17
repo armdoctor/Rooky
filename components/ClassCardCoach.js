@@ -6,6 +6,7 @@ const ClassCard = ({ classData, navigation, closeModal, listingId }) => {
     const className = item.className
     const classPrice = item.classPrice
     const classDescription = item.classDescription
+    const classSeats = item.classSeats
     const formattedStartDateTime = item.startDateTime
       ? item.startDateTime.toDate().toLocaleString('en-US', {
           hour: 'numeric',
@@ -28,7 +29,7 @@ const ClassCard = ({ classData, navigation, closeModal, listingId }) => {
       : '';
 
       const handleClassDetails = () => {
-        navigation.navigate('ClassManagementScreen', { classData, listingId, formattedEndDateTime, formattedStartDateTime, className, classPrice, classDescription });
+        navigation.navigate('ClassManagementScreen', { classData, listingId, formattedEndDateTime, formattedStartDateTime, className, classPrice, classDescription, classSeats });
       }
 
     return (

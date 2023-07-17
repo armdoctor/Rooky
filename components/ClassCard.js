@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View, FlatList, TouchableOpacity } from 'react-native';
 
-const ClassCard = ({ classData, navigation, closeModal }) => {
+const ClassCard = ({ classData, navigation, closeModal, listingId }) => {
   const renderItem = ({ item }) => {
     const formattedStartDateTime = item.startDateTime
       ? item.startDateTime.toDate().toLocaleString('en-US', {
@@ -25,7 +25,7 @@ const ClassCard = ({ classData, navigation, closeModal }) => {
       : '';
 
       const handleClassDetails = () => {
-        navigation.navigate('ClassDetailsScreen', { classData: item });
+        navigation.navigate('ClassDetailsScreen', { classData: item, listingId, classId: item.classId });
         closeModal();
       }
 

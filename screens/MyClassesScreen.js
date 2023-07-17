@@ -18,7 +18,7 @@ const MyClassesScreen = ({ route }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.title}>Group Classes</Text>
+      <Text style={styles.title}>My Group Classes</Text>
       <ClassCardCoach classData={classData} listingId={listingId} navigation={navigation}/> 
       <TouchableOpacity style={styles.createButton} onPress={openCreateClassModal}>
         <Text style={styles.createButtonText}> New Group Class</Text>
