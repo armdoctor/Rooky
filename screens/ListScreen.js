@@ -501,7 +501,7 @@ const ListScreen = ({ route, navigation }) => {
     <Modal visible={showGroupClassModal} animationType="slide">
       <SafeAreaView style={styles.groupClassesModalContainer}>
         <Text style={styles.groupClassesModalTitle}>Group Classes</Text>
-        <ClassCard classData={classData} navigation={navigation} closeModal={closeGroupClassModal} listingId={listingId}/>
+        <ClassCard classData={classData} navigation={navigation} closeModal={closeGroupClassModal} listingId={listingId} teacherId={userId}/>
         <View style={styles.groupClassesButtonContainer}>
         <TouchableOpacity style={styles.groupClassesModalButton} onPress={closeGroupClassModal}>
           <Text style={styles.groupClassesModalButtonText}>Back</Text>
