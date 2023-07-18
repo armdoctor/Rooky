@@ -143,7 +143,6 @@ const BookingManagementScreen = ({ navigation }) => {
       >
         <Text style={styles.fullName}>{item.selectedCategory} with {item.fullName}</Text>
         <Text style={styles.bookingDateTime}>{formatBookingDateTime(item)}</Text>
-        <Text style={styles.bookingDuration}>For {formattedDuration}</Text>
       </TouchableOpacity>
     );
   };
