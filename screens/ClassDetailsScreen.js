@@ -8,7 +8,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { list } from 'firebase/storage';
 
 const ClassDetailsScreen = ({ route }) => {
-  const { classData, teacherId, listingId } = route.params;
+  const { classData, listingId } = route.params;
   const formattedStartDateTime = classData.startDateTime
     ? classData.startDateTime.toDate().toLocaleString('en-US', {
         hour: 'numeric',
@@ -83,7 +83,7 @@ const ClassDetailsScreen = ({ route }) => {
         <Text style={styles.description}>{classData.classDescription}</Text>
         <Text style={styles.dateTime}>Start: {formattedStartDateTime}</Text>
         <Text style={styles.dateTime}>End: {formattedEndDateTime}</Text>
-        <Text style={styles.dateTime}>TeacherID: {teacherId}</Text>
+        <Text style={styles.dateTime}>TeacherID: {classData.teacherId}</Text>
         <Text style={styles.dateTime}>ListingID: {listingId}</Text>
         <Text style={styles.dateTime}>Created At: {formattedCreatedAt}</Text>
         <TouchableOpacity style={styles.bookButton} onPress={() => handleBookClass(userId)}>
