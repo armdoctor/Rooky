@@ -6,13 +6,13 @@ const ClassManagementScreen = ({ route }) => {
 
   return (
     <View style={styles.container}>
-      <Text>{className}</Text>
-      <Text>Class Price: ${classPrice}</Text>
-      <Text>{classDescription}</Text>
-      <Text>Start Date & Time: {formattedStartDateTime}</Text>
-      <Text>End Date & Time: {formattedEndDateTime}</Text>
-      <Text>Listing ID: {listingId}</Text>
-      <Text>Available Seats: {classSeats}</Text>
+      <Text style={styles.title}>{className}</Text>
+      <Text style={styles.price}>Class Price: ${classPrice}</Text>
+      <Text style={styles.description}>{classDescription}</Text>
+      <Text style={styles.date}>Start Date & Time: {formattedStartDateTime}</Text>
+      <Text style={styles.date}>End Date & Time: {formattedEndDateTime}</Text>
+      <Text style={styles.listingId}>Listing ID: {listingId}</Text>
+      <Text style={styles.seats}>Available Seats: {classSeats}</Text>
       {/* Add additional class details here */}
     </View>
   );
@@ -22,17 +22,36 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: '#fff',
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  price: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 10,
+    color: 'black',
+  },
+  description: {
+    fontSize: 16,
     marginBottom: 20,
   },
-  text: {
-    fontSize: 18,
+  date: {
+    fontSize: 14,
     marginBottom: 10,
+  },
+  listingId: {
+    fontSize: 14,
+    marginBottom: 10,
+    color: '#888',
+  },
+  seats: {
+    fontSize: 14,
+    marginBottom: 10,
+    fontWeight: 'bold',
   },
 });
 
