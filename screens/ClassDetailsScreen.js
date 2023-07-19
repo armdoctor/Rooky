@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { updateDoc, doc, arrayUnion } from 'firebase/firestore';
 import { db } from '../firebase/firebase';
@@ -7,7 +7,7 @@ import { getAuth } from 'firebase/auth';
 import { Ionicons } from '@expo/vector-icons';
 import { list } from 'firebase/storage';
 
-const ClassDetailsScreen = ({ route }) => {
+const ClassDetailsScreen = ({ route, navigation }) => {
   const { classData, listingId } = route.params;
   const formattedStartDateTime = classData.startDateTime
     ? classData.startDateTime.toDate().toLocaleString('en-US', {
@@ -64,7 +64,16 @@ const ClassDetailsScreen = ({ route }) => {
           Students: arrayUnion(userId), // Add the logged-in user's ID to the 'Students' array field
           classType: 'group'
         });
-    
+        // Display success message or navigate to a confirmation screen
+        Alert.alert('Booking Confirmed', 'Your booking has been confirmed successfully.', [
+          {
+            text: 'OK',
+            onPress: () => {
+              // Navigate back to the previous screen
+              navigation.goBack();
+            },
+          },
+        ]);
         // Handle any additional logic or UI updates after successful update
         console.log('Class booked! Updated class seats:', updatedClassSeats);
       } catch (error) {

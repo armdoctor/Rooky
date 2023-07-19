@@ -163,7 +163,7 @@ const BookingManagementScreen = ({ navigation }) => {
     return (
       <TouchableOpacity
         style={styles.bookingItem}
-        onPress={() => navigation.navigate('ClassDetailsScreen', { classData: item })}
+        onPress={() => navigation.navigate('BookedClassesScreen', { classData: item, teacherFullName })}
       >
         <Text style={styles.fullName}>{item.className} with {teacherFullName}</Text>
         <Text style={styles.bookingDateTime}>{formattedStartDateTime}</Text>
