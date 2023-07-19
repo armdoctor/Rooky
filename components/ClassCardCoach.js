@@ -1,8 +1,12 @@
 import React from 'react';
 import { StyleSheet, Text, View, FlatList, TouchableOpacity } from 'react-native';
 
-const ClassCard = ({ classData, navigation, closeModal, listingId, teacherId }) => {
+const ClassCard = ({ classData, navigation, closeModal, listingId }) => {
   const renderItem = ({ item }) => {
+    const className = item.className
+    const classPrice = item.classPrice
+    const classDescription = item.classDescription
+    const classSeats = item.classSeats
     const formattedStartDateTime = item.startDateTime
       ? item.startDateTime.toDate().toLocaleString('en-US', {
           hour: 'numeric',
@@ -25,14 +29,13 @@ const ClassCard = ({ classData, navigation, closeModal, listingId, teacherId }) 
       : '';
 
       const handleClassDetails = () => {
-        navigation.navigate('ClassDetailsScreen', { classData: item, listingId, classId: item.classId, teacherId });
-        closeModal();
+        navigation.navigate('ClassManagementScreen', { classData, listingId, formattedEndDateTime, formattedStartDateTime, className, classPrice, classDescription, classSeats });
       }
 
     return (
       <TouchableOpacity style={styles.classItem} onPress={handleClassDetails}>
-        <Text style={styles.className}>{item.className}</Text>
-        <Text style={styles.price}>${item.classPrice}</Text>
+        <Text style={styles.className}>{className}</Text>
+        <Text style={styles.price}>${classPrice}</Text>
         <Text style={styles.date}>{formattedStartDateTime}</Text>
       </TouchableOpacity>
     );

@@ -436,8 +436,8 @@ const ListScreen = ({ route, navigation }) => {
         <TouchableOpacity style={styles.button} onPress={handleEditListing}>
           <Text style={styles.buttonText}>Edit Listing</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('MyClassesScreen', { listingId, classData, closeGroupClassModal })}>
-          <Text style={styles.buttonText}>Group Classes</Text>
+        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('MyClassesScreen', { listingId, classData, closeGroupClassModal, navigation })}>
+          <Text style={styles.buttonText}>My Group Classes</Text>
         </TouchableOpacity>
       </View>
     )}
@@ -501,7 +501,7 @@ const ListScreen = ({ route, navigation }) => {
     <Modal visible={showGroupClassModal} animationType="slide">
       <SafeAreaView style={styles.groupClassesModalContainer}>
         <Text style={styles.groupClassesModalTitle}>Group Classes</Text>
-        <ClassCard classData={classData} navigation={navigation} closeModal={closeGroupClassModal}/>
+        <ClassCard classData={classData} navigation={navigation} closeModal={closeGroupClassModal} listingId={listingId} teacherId={userId}/>
         <View style={styles.groupClassesButtonContainer}>
         <TouchableOpacity style={styles.groupClassesModalButton} onPress={closeGroupClassModal}>
           <Text style={styles.groupClassesModalButtonText}>Back</Text>
@@ -608,7 +608,7 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     paddingHorizontal: 20,
     marginBottom: 15,
-    marginHorizontal: 10,
+    marginHorizontal: 7,
   },
   buttonText: {
     color: '#fff',

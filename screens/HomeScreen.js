@@ -232,7 +232,7 @@ const HomeScreen = ({ navigation }) => {
         style={styles.bookingItem}
         onPress={() => navigation.navigate('BookingDetailsScreen', { booking: item })}
       >
-        <Text style={styles.fullName}>{item.selectedCategory} with {item.fullName}</Text>
+        <Text style={styles.fullName}>{item.selectedCategory} Class with {item.fullName}</Text>
         <Text style={styles.bookingDateTime}>{formatBookingDateTime(item)}</Text>
         <Text style={styles.bookingDuration}>For {formattedDuration}</Text>
       </TouchableOpacity>
@@ -264,7 +264,7 @@ const HomeScreen = ({ navigation }) => {
           </TouchableOpacity>
         ))}
       </View>
-      <Text style={styles.heading}>Academics</Text>
+      {/*<Text style={styles.heading}>Academics</Text>*/}
       <View style={styles.categoryAcadsContainer}>
         {categoryAcadsList.map((category) => (
           <TouchableOpacity
@@ -277,7 +277,7 @@ const HomeScreen = ({ navigation }) => {
         ))}
       </View>
       {/* Upcoming Bookings */}
-      <Text style={styles.categoryUpcoming}>Upcoming Bookings</Text>
+      <Text style={styles.categoryUpcoming}>Upcoming Classes</Text>
         <FlatList
           data={upcomingBookings}
           renderItem={renderItem}

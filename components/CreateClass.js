@@ -1,37 +1,59 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, TextInput, TouchableOpacity, View, KeyboardAvoidingView } from 'react-native';
-import { addDoc, collection, doc, serverTimestamp } from 'firebase/firestore';
+import { addDoc, collection, doc, serverTimestamp, updateDoc } from 'firebase/firestore';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { db } from '../firebase/firebase';
+import { getAuth } from 'firebase/auth';
 
 const CreateClass = ({ closeModal, listingId }) => {
   const [className, setClassName] = useState('');
   const [classPrice, setClassPrice] = useState('');
+  const [classSeats, setClassSeats] = useState('');
   const [classDescription, setClassDescription] = useState('');
   const [startDateTime, setStartDateTime] = useState(new Date());
   const [endDateTime, setEndDateTime] = useState(new Date());
   const [showStartDateTimePicker, setShowStartDateTimePicker] = useState(false);
   const [showEndDateTimePicker, setShowEndDateTimePicker] = useState(false);
+  
+  const auth = getAuth();
+  // Function to fetch the current user's ID
+  const getCurrentUserId = () => {
+    const user = auth.currentUser;
+    if (user) {
+      return user.uid;
+    } else {
+      // User is not logged in
+      return null;
+    }
+  };
+  const teacherId = getCurrentUserId();
 
   const handleCreateClass = async () => {
     try {
       const classData = {
         className,
         classPrice: parseFloat(classPrice),
+        classSeats: parseFloat(classSeats),
         classDescription,
         startDateTime,
         endDateTime,
         createdAt: serverTimestamp(),
         listingId,
+        teacherId
       };
-
-      await addDoc(collection(db, 'classes'), classData);
+  
+      const docRef = await addDoc(collection(db, 'classes'), classData);
+      const classId = docRef.id; // Retrieve the automatically generated document ID
+  
+      // Update the 'classId' field in the document
+      await updateDoc(doc(db, 'classes', classId), { classId });
+  
       closeModal();
     } catch (error) {
       console.error('Error creating class:', error);
     }
   };
-
+  
   const handleStartDateTimeChange = (event, selectedDate) => {
     const currentDate = selectedDate || startDateTime;
     setShowStartDateTimePicker(false);
@@ -60,6 +82,14 @@ const CreateClass = ({ closeModal, listingId }) => {
         placeholderTextColor="#888"
         value={classPrice}
         onChangeText={setClassPrice}
+        keyboardType="numeric"
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Number of Seats"
+        placeholderTextColor="#888"
+        value={classSeats}
+        onChangeText={setClassSeats}
         keyboardType="numeric"
       />
       <TextInput

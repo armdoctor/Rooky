@@ -9,6 +9,7 @@ const BookingManagementScreen = ({ navigation }) => {
   const currentUser = auth.currentUser;
   const [upcomingBookings, setUpcomingBookings] = useState([]);
   const [completedBookings, setCompletedBookings] = useState([]);
+  const [groupClassBookings, setGroupClassBookings] = useState([]);
 
   const fetchBookings = async () => {
     try {
@@ -82,6 +83,36 @@ const BookingManagementScreen = ({ navigation }) => {
     }, [])
   );
 
+  useEffect(() => {
+    const fetchGroupBookings = async () => {
+      try {
+        const classesQuery = query(collection(db, 'classes'), where('Students', 'array-contains', currentUser.uid));
+        const classesSnapshot = await getDocs(classesQuery);
+        const groupClassBookings = [];
+
+        const fetchTeacherFullName = async (teacherId) => {
+          const teacherQuery = query(collection(db, 'users'), where('userId', '==', teacherId));
+          const teacherSnapshot = await getDocs(teacherQuery);
+          const teacher = teacherSnapshot.docs[0].data();
+          return teacher.fullName;
+        };
+
+        for (const doc of classesSnapshot.docs) {
+          const classData = { classId: doc.id, ...doc.data() };
+          const teacherFullName = await fetchTeacherFullName(classData.teacherId);
+          classData.teacherFullName = teacherFullName;
+          groupClassBookings.push(classData);
+        }
+
+        setGroupClassBookings(groupClassBookings);
+      } catch (error) {
+        console.error('Error fetching group class bookings:', error);
+      }
+    };
+
+    fetchGroupBookings();
+  }, [currentUser.uid]);
+
   const handleBackButtonPress = () => {
     navigation.goBack();
   };
@@ -112,7 +143,30 @@ const BookingManagementScreen = ({ navigation }) => {
       >
         <Text style={styles.fullName}>{item.selectedCategory} with {item.fullName}</Text>
         <Text style={styles.bookingDateTime}>{formatBookingDateTime(item)}</Text>
-        <Text style={styles.bookingDuration}>For {formattedDuration}</Text>
+      </TouchableOpacity>
+    );
+  };
+
+  const renderGroupClassItem = ({ item }) => {
+    const teacherFullName = item.teacherFullName
+    const formattedStartDateTime = item.startDateTime
+      ? item.startDateTime.toDate().toLocaleString('en-US', {
+          hour: 'numeric',
+          minute: 'numeric',
+          hour12: true,
+          month: 'long',
+          day: 'numeric',
+          year: 'numeric',
+        })
+      : '';
+  
+    return (
+      <TouchableOpacity
+        style={styles.bookingItem}
+        onPress={() => navigation.navigate('BookedClassesScreen', { classData: item, teacherFullName })}
+      >
+        <Text style={styles.fullName}>{item.className} with {teacherFullName}</Text>
+        <Text style={styles.bookingDateTime}>{formattedStartDateTime}</Text>
       </TouchableOpacity>
     );
   };
@@ -125,13 +179,22 @@ const BookingManagementScreen = ({ navigation }) => {
         </TouchableOpacity>
         <Text style={styles.heading}>My Bookings</Text>
         {/* Upcoming Bookings */}
-        <Text style={styles.categoryUpcoming}>Upcoming</Text>
+        <Text style={styles.categoryUpcoming}>Upcoming Private Classes</Text>
         <FlatList
           data={upcomingBookings}
           renderItem={renderItem}
           keyExtractor={(item) => item.id}
           contentContainerStyle={styles.listContainer}
           ListEmptyComponent={<Text style={styles.subtext}>No upcoming bookings</Text>}
+        />
+        {/* Upcoming Group Bookings */}
+        <Text style={styles.categoryUpcoming}>Upcoming Group Classes</Text>
+        <FlatList
+          data={groupClassBookings}
+          renderItem={renderGroupClassItem}
+          keyExtractor={(item) => item.classId}
+          contentContainerStyle={styles.listContainer}
+          ListEmptyComponent={<Text style={styles.subtext}>No upcoming group classes</Text>}
         />
 
         {/* Completed Bookings */}
