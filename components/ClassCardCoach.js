@@ -7,30 +7,45 @@ const ClassCard = ({ classData, navigation, closeModal, listingId }) => {
     const classPrice = item.classPrice
     const classDescription = item.classDescription
     const classSeats = item.classSeats
-    const formattedStartDateTime = item.startDateTime
-      ? item.startDateTime.toDate().toLocaleString('en-US', {
-          hour: 'numeric',
-          minute: 'numeric',
-          hour12: true,
-          month: 'long',
-          day: 'numeric',
-          year: 'numeric',
-        })
-      : '';
-    const formattedEndDateTime = item.endDateTime
-      ? item.endDateTime.toDate().toLocaleString('en-US', {
-          hour: 'numeric',
-          minute: 'numeric',
-          hour12: true,
-          month: 'long',
-          day: 'numeric',
-          year: 'numeric',
-        })
-      : '';
+    const startDateTime = item.startDateTime
+    const endDateTime = item.endDateTime
+
 
       const handleClassDetails = () => {
-        navigation.navigate('ClassManagementScreen', { classData, listingId, formattedEndDateTime, formattedStartDateTime, className, classPrice, classDescription, classSeats });
-      }
+        navigation.navigate('ClassManagementScreen', {
+          classData: {
+            ...classData,
+            listingId,
+            startDateTime,
+            endDateTime,
+            className,
+            classPrice,
+            classDescription,
+            classSeats,
+          },
+        });
+      };
+
+      const formattedStartDateTime = startDateTime
+      ? startDateTime.toDate().toLocaleString('en-US', {
+          hour: 'numeric',
+          minute: 'numeric',
+          hour12: true,
+          month: 'long',
+          day: 'numeric',
+          year: 'numeric',
+        })
+      : '';
+    const formattedEndDateTime = endDateTime
+      ? endDateTime.toDate().toLocaleString('en-US', {
+          hour: 'numeric',
+          minute: 'numeric',
+          hour12: true,
+          month: 'long',
+          day: 'numeric',
+          year: 'numeric',
+        })
+      : '';
 
     return (
       <TouchableOpacity style={styles.classItem} onPress={handleClassDetails}>

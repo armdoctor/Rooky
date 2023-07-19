@@ -7,13 +7,34 @@ const ClassManagementScreen = ({ route }) => {
     // Access the class information from the classData object
     const {
       listingId,
-      formattedEndDateTime,
-      formattedStartDateTime,
+      startDateTime,
+      endDateTime,
       className,
       classPrice,
       classDescription,
       classSeats,
     } = classData;
+
+    const formattedStartDateTime = startDateTime
+      ? startDateTime.toDate().toLocaleString('en-US', {
+          hour: 'numeric',
+          minute: 'numeric',
+          hour12: true,
+          month: 'long',
+          day: 'numeric',
+          year: 'numeric',
+        })
+      : '';
+    const formattedEndDateTime = endDateTime
+      ? endDateTime.toDate().toLocaleString('en-US', {
+          hour: 'numeric',
+          minute: 'numeric',
+          hour12: true,
+          month: 'long',
+          day: 'numeric',
+          year: 'numeric',
+        })
+      : '';
   
     return (
       <View style={styles.container}>
