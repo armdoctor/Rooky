@@ -86,32 +86,47 @@ const BookingManagementScreen = ({ navigation }) => {
   useEffect(() => {
     const fetchGroupBookings = async () => {
       try {
-        const classesQuery = query(collection(db, 'classes'), where('Students', 'array-contains', currentUser.uid));
-        const classesSnapshot = await getDocs(classesQuery);
+        const studentsQuery = query(collection(db, 'classes'), where('Students', 'array-contains', currentUser.uid));
+        const teacherQuery = query(collection(db, 'classes'), where('teacherId', '==', currentUser.uid));
+        
+        const studentsSnapshot = await getDocs(studentsQuery);
+        const teacherSnapshot = await getDocs(teacherQuery);
+  
         const groupClassBookings = [];
-
+        
         const fetchTeacherFullName = async (teacherId) => {
           const teacherQuery = query(collection(db, 'users'), where('userId', '==', teacherId));
           const teacherSnapshot = await getDocs(teacherQuery);
           const teacher = teacherSnapshot.docs[0].data();
           return teacher.fullName;
         };
-
-        for (const doc of classesSnapshot.docs) {
+  
+        for (const doc of studentsSnapshot.docs) {
           const classData = { classId: doc.id, ...doc.data() };
           const teacherFullName = await fetchTeacherFullName(classData.teacherId);
           classData.teacherFullName = teacherFullName;
           groupClassBookings.push(classData);
         }
-
+  
+        for (const doc of teacherSnapshot.docs) {
+          const classData = { classId: doc.id, ...doc.data() };
+          const teacherFullName = await fetchTeacherFullName(classData.teacherId);
+          classData.teacherFullName = teacherFullName;
+          // Only add the class data if it hasn't already been added (to avoid duplicates)
+          if (!groupClassBookings.some(item => item.classId === classData.classId)) {
+            groupClassBookings.push(classData);
+          }
+        }
+  
         setGroupClassBookings(groupClassBookings);
       } catch (error) {
         console.error('Error fetching group class bookings:', error);
       }
     };
-
+  
     fetchGroupBookings();
   }, [currentUser.uid]);
+  
 
   const handleBackButtonPress = () => {
     navigation.goBack();
@@ -148,7 +163,7 @@ const BookingManagementScreen = ({ navigation }) => {
   };
 
   const renderGroupClassItem = ({ item }) => {
-    const teacherFullName = item.teacherFullName
+    const teacherFullName = item.teacherFullName;
     const formattedStartDateTime = item.startDateTime
       ? item.startDateTime.toDate().toLocaleString('en-US', {
           hour: 'numeric',
@@ -160,16 +175,24 @@ const BookingManagementScreen = ({ navigation }) => {
         })
       : '';
   
+    const isCurrentUserTeacher = item.teacherId === currentUser.uid;
+  
+    const onPressItem = () => {
+      if (isCurrentUserTeacher) {
+        navigation.navigate('ClassManagementScreen', { classData: item });
+      } else {
+        navigation.navigate('BookedClassesScreen', { classData: item, teacherFullName });
+      }
+    };
+  
     return (
-      <TouchableOpacity
-        style={styles.bookingItem}
-        onPress={() => navigation.navigate('BookedClassesScreen', { classData: item, teacherFullName })}
-      >
+      <TouchableOpacity style={styles.bookingItem} onPress={onPressItem}>
         <Text style={styles.fullName}>{item.className} with {teacherFullName}</Text>
         <Text style={styles.bookingDateTime}>{formattedStartDateTime}</Text>
       </TouchableOpacity>
     );
   };
+  
 
   return (
     <View style={styles.container}>

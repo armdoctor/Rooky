@@ -90,7 +90,6 @@ function App() {
         <Stack.Screen
           name='ClassManagementScreen'
           component={ClassManagementScreen}
-          options={{ headerShown: false }}
         />
         <Stack.Screen 
         name='Chat'
