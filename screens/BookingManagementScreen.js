@@ -179,8 +179,10 @@ const BookingManagementScreen = ({ navigation }) => {
   
     const onPressItem = () => {
       if (isCurrentUserTeacher) {
+        console.log('Navigating to ClassManagementScreen with classData:', item);
         navigation.navigate('ClassManagementScreen', { classData: item });
       } else {
+        console.log('Navigating to BookedClassesScreen with classData:', item);
         navigation.navigate('BookedClassesScreen', { classData: item, teacherFullName });
       }
     };
