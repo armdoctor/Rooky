@@ -287,7 +287,7 @@ const HomeScreen = ({ navigation }) => {
           <View>
             <Text style={styles.subtext}>No upcoming bookings... yet.</Text>
             <Text style={styles.subtext}>Pick a sport above to book a class!</Text>
-            {/*<Image source={StickFiguresImage} style={styles.stickFigureImage}/>*/}
+            <Image source={StickFiguresImage} style={styles.stickFigureImage}/>
           </View>
         }
         />

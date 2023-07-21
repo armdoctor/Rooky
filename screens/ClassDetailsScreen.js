@@ -40,6 +40,7 @@ const ClassDetailsScreen = ({ route, navigation }) => {
       })
     : '';
   const auth = getAuth();
+
   // Function to fetch the current user's ID
   const getCurrentUserId = () => {
     const user = auth.currentUser;
@@ -52,34 +53,36 @@ const ClassDetailsScreen = ({ route, navigation }) => {
   };
   const userId = getCurrentUserId();
 
+  const handleBookClass = async (userId) => {
+    const updatedClassSeats = classData.classSeats - 1;
 
-    const handleBookClass = async (userId) => {
-      const updatedClassSeats = classData.classSeats - 1;
-    
-      try {
-        // Update the 'classSeats' and 'Students' fields in Firestore
-        const classRef = doc(db, 'classes', classData.classId);
-        await updateDoc(classRef, {
-          classSeats: updatedClassSeats,
-          Students: arrayUnion(userId), // Add the logged-in user's ID to the 'Students' array field
-          classType: 'group'
-        });
-        // Display success message or navigate to a confirmation screen
-        Alert.alert('Booking Confirmed', 'Your booking has been confirmed successfully.', [
-          {
-            text: 'OK',
-            onPress: () => {
-              // Navigate back to the previous screen
-              navigation.goBack();
-            },
+    try {
+      // Update the 'classSeats' and 'Students' fields in Firestore
+      const classRef = doc(db, 'classes', classData.classId);
+      await updateDoc(classRef, {
+        classSeats: updatedClassSeats,
+        Students: arrayUnion(userId), // Add the logged-in user's ID to the 'Students' array field
+        classType: 'group',
+      });
+      // Display success message or navigate to a confirmation screen
+      Alert.alert('Booking Confirmed', 'Your booking has been confirmed successfully.', [
+        {
+          text: 'OK',
+          onPress: () => {
+            // Navigate back to the previous screen
+            navigation.goBack();
           },
-        ]);
-        // Handle any additional logic or UI updates after successful update
-        console.log('Class booked! Updated class seats:', updatedClassSeats);
-      } catch (error) {
-        console.error('Error updating class seats:', error);
-      }
-    };    
+        },
+      ]);
+      // Handle any additional logic or UI updates after successful update
+      console.log('Class booked! Updated class seats:', updatedClassSeats);
+    } catch (error) {
+      console.error('Error updating class seats:', error);
+    }
+  };
+
+  // Check if the current user's userId is present in the 'students' array
+  const isUserBooked = classData.Students.includes(userId);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -95,9 +98,14 @@ const ClassDetailsScreen = ({ route, navigation }) => {
         <Text style={styles.dateTime}>TeacherID: {classData.teacherId}</Text>
         <Text style={styles.dateTime}>ListingID: {listingId}</Text>
         <Text style={styles.dateTime}>Created At: {formattedCreatedAt}</Text>
-        <TouchableOpacity style={styles.bookButton} onPress={() => handleBookClass(userId)}>
-          <Text style={styles.bookButtonText}>Book Class</Text>
-        </TouchableOpacity>
+        
+        {isUserBooked ? (
+          <Text style={styles.alreadyBooked}>You have already booked this class.</Text>
+        ) : (
+          <TouchableOpacity style={styles.bookButton} onPress={() => handleBookClass(userId)}>
+            <Text style={styles.bookButtonText}>Book Class</Text>
+          </TouchableOpacity>
+        )}
       </View>
     </SafeAreaView>
   );
